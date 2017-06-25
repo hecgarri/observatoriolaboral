@@ -1,0 +1,49 @@
+"","sector","mes","conmutante.x","se conmutante","cv","conmutante.y","Freq"
+"1","Administracion Publica",1,1073.2368233,606.447210664451,56.51,"1",6
+"2","Administracion Publica",2,930.76840171,682.569223032645,73.33,"1",9
+"3","Administracion Publica",3,203.10925408,148.120381172047,72.93,"1",7
+"4","Administracion Publica",4,509.31619085,317.349489011965,62.31,"1",3
+"5","Agropecuario-Silvicola",1,2033.79337976,672.355910538909,33.06,"1",9
+"6","Agropecuario-Silvicola",2,1429.44392512,658.614270938285,46.07,"1",10
+"7","Agropecuario-Silvicola",3,1558.30054722,943.964909706774,60.58,"1",8
+"8","Agropecuario-Silvicola",4,736.879331,736.879331,100,"1",22
+"9","Comercio",1,65.32224467,65.3222446699999,100,"1",8
+"10","Comercio",2,403.55115624,339.647204768274,84.16,"1",6
+"11","Comercio",3,414.50096851,414.50096851,100,"1",2
+"12","Comercio",4,454.82025693,454.82025693,100,"1",1
+"13","Construccion",1,1114.25486767,568.446266989902,51.02,"1",14
+"14","Construccion",2,959.43455887,575.096833700054,59.94,"1",11
+"15","Construccion",3,2746.48660667,1090.75170727687,39.71,"1",16
+"16","Construccion",4,921.85584916,493.499277461739,53.53,"1",7
+"17","Electricidad, Gas y Agua",1,0,0,NA,"1",0
+"18","Electricidad, Gas y Agua",2,924.39763254,834.816726998335,90.31,"1",2
+"19","Electricidad, Gas y Agua",3,127.93994403,127.93994403,100,"1",0
+"20","Electricidad, Gas y Agua",4,0,0,NA,"1",2
+"21","Hoteles y Restoranes",1,162.59793123,116.555073814925,71.68,"1",2
+"22","Hoteles y Restoranes",2,93.00548619,93.0054861900003,100,"1",0
+"23","Hoteles y Restoranes",3,0,0,NA,"1",1
+"24","Hoteles y Restoranes",4,0,0,NA,"1",1
+"25","Industria Manufacturera",1,1287.37816074,604.593578062845,46.96,"1",6
+"26","Industria Manufacturera",2,1999.48435506,768.704653487773,38.45,"1",4
+"27","Industria Manufacturera",3,1567.40261261,631.748319724491,40.31,"1",3
+"28","Industria Manufacturera",4,1728.34245185,740.545702183413,42.85,"1",6
+"29","Inmobiliarias",1,0,0,NA,"1",4
+"30","Inmobiliarias",2,135.72009638,135.72009638,100,"1",1
+"31","Inmobiliarias",3,0,0,NA,"1",2
+"32","Inmobiliarias",4,0,0,NA,"1",2
+"33","Intermediacion Financiera",1,0,0,NA,"1",1
+"34","Intermediacion Financiera",2,0,0,NA,"1",1
+"35","Intermediacion Financiera",3,0,0,NA,"1",0
+"36","Intermediacion Financiera",4,0,0,NA,"1",0
+"37","Mineria",1,178.88027595,178.88027595,100,"1",11
+"38","Mineria",2,0,0,NA,"1",9
+"39","Mineria",3,0,0,NA,"1",7
+"40","Mineria",4,0,0,NA,"1",9
+"41","Servicios Sociales y Personales",1,0,0,NA,"1",3
+"42","Servicios Sociales y Personales",2,698.38959279,538.699469176266,77.13,"1",2
+"43","Servicios Sociales y Personales",3,246.52288154,159.559269600612,64.72,"1",4
+"44","Servicios Sociales y Personales",4,163.69395539,116.411733527165,71.12,"1",6
+"45","Transporte y Comunicaciones",1,1215.13246554,730.661907395847,60.13,"1",10
+"46","Transporte y Comunicaciones",2,134.42944217,134.42944217,100,"1",9
+"47","Transporte y Comunicaciones",3,1085.92486693,592.55454191721,54.57,"1",6
+"48","Transporte y Comunicaciones",4,606.72633776,419.847229495414,69.2,"1",9
