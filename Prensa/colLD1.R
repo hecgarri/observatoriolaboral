@@ -24,7 +24,13 @@ directorio.casen = data.frame(names(directorio.casen),directorio.casen)
 casen2015 = data.frame(casen2015)
 
 
-library(survey)
+if (!require(survey)) insall.packages("survey")
+
+casen2015 = mutate(casen2015, yautcorh2 = yautcorh/numper, 
+                   dependiente = ifelse(o15==3 | o15==4 |
+                                          o15==5 | o15==6 |
+                                          o15==7,1,0)) 
+
 
 diseño = svydesign(id = ~varunit, strata = ~varstrat,
                    weights = ~expr, nest = TRUE, data = casen2015)
@@ -42,5 +48,24 @@ if (!require(tidyverse)) install.packages("tidyverse")
 
 filtrados = casen2015 %>% filter(edad>=15 & edad<=29 & provincia==84)
 
-with(filtrados, gini(yoprCor, weights = expr))
-with(casen2015, gini(yoprCor, weights = expr))
+# Para ver las variables de la CASEN que involucran ingresos 
+grep("ypc", names(casen2015), value = TRUE)
+
+
+with(subset(casen2015, !is.na(yoprCor) & provincia ==84 &
+              o10>=30 & edad>=25 & edad<=60 & 
+              dependiente==1),
+     gini(ytrabajoCor, weights = expr))
+
+with(subset(casen2015, !is.na(yoprCor) & o10>=30 & edad>=25 &
+              edad<=60 & 
+              dependiente==1),
+     gini(ytrabajoCor, weights = expr))
+
+svyratio(~I(ytrabajoCor<=341000 & o10>=30 & edad>=25 & edad<=60 & 
+             dependiente==1), ~I(o10>=30 & edad>=25 & edad<=60 & dependiente==1), 
+         design = diseño, na.rm=TRUE)
+
+svyratio(~I(ytrabajoCor<=341000 & o10>=30 & edad>=25 & edad<=60 & 
+              dependiente==1), ~I(o10>=30 & edad>=25 & edad<=60 & dependiente==1), 
+         design = subset(diseño, provincia==84), na.rm=TRUE)
