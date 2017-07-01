@@ -46,26 +46,11 @@ ciuo = ciuo %>% group_by(etiqueta, codigo) %>% filter(row_number(codigo)==1)
 if (!require(reldist)) install.packages("reldist")
 if (!require(tidyverse)) install.packages("tidyverse")
 
-filtrados = casen2015 %>% filter(edad>=15 & edad<=29 & provincia==84)
-
-# Para ver las variables de la CASEN que involucran ingresos 
-grep("ypc", names(casen2015), value = TRUE)
-
-
-with(subset(casen2015, !is.na(yoprCor) & provincia ==84 &
-              o10>=30 & edad>=25 & edad<=60 & 
-              dependiente==1),
-     gini(ytrabajoCor, weights = expr))*1003
-
-with(subset(casen2015, !is.na(yoprCor) & o10>=30 & edad>=25 &
-              edad<=60 & 
-              dependiente==1),
-     gini(ytrabajoCor, weights = expr))
-
-svyratio(~I(yoprCor<343000 & o10>=30 & edad>=25 & edad<=60 & 
-             dependiente==1), ~I(o10>=30 & edad>=25 & edad<=60 & dependiente==1), 
-         design = diseño, na.rm=TRUE)
-
-svyratio(~I(yoprCor<343000 & o10>=30 & edad>=25 & edad<=60 & 
-              dependiente==1), ~I(o10>=30 & edad>=25 & edad<=60 & dependiente==1), 
+svyratio(~I(yoprCor<=192800),~I(o1==1 | o2==1 | o3==1),
          design = subset(diseño, provincia==84), na.rm=TRUE)
+
+svytotal(~I(yoprCor<=192800), design = subset(diseño, provincia==84), na.rm=TRUE)
+
+svytotal(~I(o1==1 | o2==1 | o3==1), design = subset(diseño, provincia==84), na.rm=TRUE)
+
+svymean(~I(yoprCor<=192800), design = subset(diseño, provincia==84), na.rm=TRUE)
