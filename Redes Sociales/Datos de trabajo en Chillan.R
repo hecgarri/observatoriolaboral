@@ -1,12 +1,12 @@
 
-setwd("~/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cuantitativo/Facebook")
+setwd("~/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cuantitativo/GitHub/observatoriolaboral/Redes Sociales")
 
 
 # token generated here: https://developers.facebook.com/tools/explorer 
 # El token es temporal, hay que redirigirse a la dirección cada vez. 
+if (!require(Rfacebook)) devtools::install_github("pablobarbera/Rfacebook/Rfacebook")
 
-
-token = "EAACEdEose0cBADoLQugjih9alc0YZB3zDVCPfEAWvgmYcHqkeekmGKKTqc4dqQZCxbF52EP4UFoa9PqXnUOt9RIOCIDk3fLZBj6hZCA7KEOA3PIQrBYQCwZB7bXEiBhXA07Pt6hAV93tGXqERV13hGQZBiXZC3JU7R4xt2jqlDdsho7RuiJBf8uAdDh3B9875gZD"
+token = "EAACEdEose0cBADgKUdFCfJogYzZCm6bB8mV0J6ZARAV8sXUThO7uRDDSwZCZAuspynfOVXuDkZCWZA3mtxO8EluIX37vfX5gtgfVeEkalGZAM9mEu6H6zbz4gPaDMpR0ZBPu44B9G1elWniD1QoDnS34knkvUNJDm0TzSEyvhwhZCZC2mZCnwEHDnLhEfxXpVjTcXoZD"
 
 
 me <- getUsers("me", token, private_info=TRUE)
