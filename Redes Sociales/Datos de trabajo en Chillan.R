@@ -10,7 +10,7 @@ setwd("~/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cu
 if (!require(Rfacebook)) devtools::install_github("pablobarbera/Rfacebook/Rfacebook")
 if (!require(data.table)) install.packages("data.table")
 
-token = "EAACEdEose0cBAOCJDTcztQGvH7cG2MtPuRfSDhpX3zmiL596jn5yy3FZCGgwVPkD8OW9HriFQNuZCkponZBkAhOPhcjjOB8GV2kT3GzkF8T7VLXhvnZAH3niU2C2HZCPvSwZCIObUYi8AaQFjcHJbFhfXPKvqXfhqspY2mXWZBvZBYQ3RXlGbPKdZAewJj6Ok5yMZD"
+token = "EAACEdEose0cBAIC0ZAruTKqvsJQciDxvqZCDwkYvRypGAyrJf7QKYHUPuP3dHZC9nomuBi7FL93W6BXQ5WX4ZCeQ1b8GVbwNwA3Hp0w46cZC34KQZACCagNw0TLWWU8IvyVxMrEFXLxBZCgkrnmxvgcG7IB7rtTZAMtOez1R74wE3B2HkS669wVFcFFXQLTCjIgZD"
 
 
 me <- getUsers("me", token, private_info=TRUE) #mis datos como usuario 
@@ -31,7 +31,8 @@ group3 = getGroup(group_id = 241293439569652, token = token, n=Inf)
 
 # Una vez descargados los datos procedo a guardarlos en un archivo .csv
 
-write.csv(group3, paste0((Sys.Date()-1)," Datos de trabajo en Chillan.csv"))
+write.csv(group3, paste0((Sys.Date()-1)," Datos de trabajo en Chillan.csv"), 
+          fileEncoding = "UTF-8")
 
 # Para solucionar un problema con el ENCODING tuve que utilizar la siguiente
 # secuencia de comandos en la consola
@@ -41,12 +42,15 @@ write.csv(group3, paste0((Sys.Date()-1)," Datos de trabajo en Chillan.csv"))
 #iconv: secuencia de entrada ilegal en la posición 7
 #$ iconv -c -f ascii -t utf8 -o destino.txt origen.txt
 
+saveRDS(group3,paste0((Sys.Date()-1)," Datos de trabajo en Chillan.rds"))
 
+list.files(pattern = ".rds$")
 
+posts = readRDS("2017-08-01 Datos de trabajo en Chillan.rds")
 
-posts = read.table('2017-07-31 Datos de trabajo en Chillan.csv',sep=",",
-                   head=T, stringsAsFactors=F, fill = TRUE, 
-                   fileEncoding = "ISO-8859-15")
+Encoding(posts$message) <- "UTF-8"
+
+posts$message = iconv(posts$message, "UTF-8", "UTF-8",sub='')
 
 #cargo una serie de librerías de utilidad en el análisis del discurso. 
 
@@ -202,7 +206,7 @@ wf = data.frame(word = names(freq), freq = freq) # frecuencia de las palabras
 
 write.csv(wf, file="frecuencia.csv")
 
-subset(wf, freq>6) %>%  ggplot(aes(word, freq))+ geom_bar(stat="identity")+
+subset(wf, freq>150) %>%  ggplot(aes(word, freq))+ geom_bar(stat="identity")+
   theme(axis.text.x=element_text(angle=45, hjust=1))
 
 
