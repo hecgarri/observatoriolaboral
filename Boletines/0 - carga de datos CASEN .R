@@ -26,3 +26,12 @@ casen2015 = data.frame(casen2015)
 
 diseño = svydesign(id = ~varunit, strata = ~varstrat,weights = ~expr, nest = TRUE, data = casen2015)
 
+diseño$variables = mutate(diseño$variables, educ2 = ifelse(educ==0 | educ==1 | educ==2,"Básica o menor",
+                                                    ifelse(educ==3 | educ==4, "Media incompleta", 
+                                                    ifelse(educ==5 | educ==6 | educ==7 | educ==9, "Media completa",
+                                                    ifelse(educ==6 | educ==8 | educ==10 | 
+                                                           educ==11 | educ==12, "E. Superior", NA)))))
+
+salarios = svyby(~yoprCor, by=~sexo+educ2,na.rm=TRUE, svymean,
+                 design = subset(diseño, provincia==84)) %>% mutate(cv = round((se/yoprCor)*100,2))
+

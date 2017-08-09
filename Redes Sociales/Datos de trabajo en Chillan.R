@@ -214,8 +214,6 @@ set.seed(1234)
 wordcloud(names(freq), freq, min.freq = 2, scale=c(5,0.6), colors=brewer.pal(8, "Dark2"), 
           random.order = FALSE, random.color = TRUE)
 
-
-
 require(fpc)
 require(cluster)
 
