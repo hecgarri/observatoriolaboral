@@ -239,6 +239,11 @@ subset(wf, freq>65 & freq<80) %>%  ggplot(aes(x = reorder(word, -freq),y= freq))
 
 head(wf, 150)
 
+palabras = as.character(head(wf,10)$word)
+findAssocs(dtm,palabras,rep(0.6,10))
+
+
+
 findAssocs(dtm, "part",0.6)
 
 findAssocs(dtm, "vendedor",0.6)
