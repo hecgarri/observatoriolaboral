@@ -20,7 +20,40 @@ knitr::opts_chunk$set(echo = FALSE)
 
 
 -  A pesar de que las redes sociales generan grandes volúmenes de información en tiempo real (Big Data). No reemplazan las estadísticas oficiales de empleo porque 
+- No existe forma (razonable) de verificar que los posts sean fidedignos 
+- Un requerimiento de empleo puede postearse muchas veces (duplicidad)
+- Las redes sociales no representan a toda una población pues hay aún ciertos grupos que no las utilizan. De forma que de ninguna forma reemplazan una encuesta representativa
 
+Lo anterior implica que utilicemos las redes sociales para medir percepciones, más que cualquier otra cosa 
+
+## Contexto 
+
+- Para extrear los posts sobre empleo es necesario que los grupos sean: (i) públicos o (ii) ser administrador de dicho grupo. 
+- Los grupos en Facebook son por defecto cerrados. De los grupos chillanenses con actividad importante todos son cerrados. 
+- Me contacté con un usuario y le pedí que me cediera la administración de un grupo, explicándole mi labor en el OLR Ñuble. Dicha persona accedió amablemente. 
+- Esto ahorra mucho trabajo en la medida en que el grupo ya tenía actividad y muchos miembros. 
+
+## Datos de trabajo en Chillán
+
+-  Dirección del grupo: https://www.facebook.com/groups/241293439569652/
+- 17.542 miembros 
+- 4.974 posts en un período aproximado de un año. 
+- El grupo no tiene posts (o casi) sobre ventas u otras temáticas, pues el administrador anterior fue muy meticuloso en mantener el objetivo del grupo, labor que he seguido realizando, revisando éste a diario y borrando aquellos posts fuera de contexto
+
+## Metodología 
+
+- Facebook provee una API a través de la cual se pueden descargar posts, ya sea de grupos o páginas. 
+- A través del lenguaje \texttt{R} utilicé la librería \texttt{Rfacebook} para conectarme con dicha API 
+- Puedo descargar además de los posts (como texto, directamente), las fechas y las reacciones a dichos posts (likes, reacciones, shares, etc)
+
+## Metodología 
+
+-  Una vez obtenidos los posteos es necesario depurar y darle cierta estructura al texto. 
+- Básicamente se eliminan números, símbolos, puntuaciones y emojis. 
+- Parte importante de la preparación de los datos consiste en eliminar \textit{stopwords}, que son palabras inútiles para nuestro objetivo. 
+- También se reemplazan sinónimos. 
+
+A continuación se presentan algunos resultados preliminares 
 
 ## Word Cloud
 
@@ -38,4 +71,28 @@ knitr::opts_chunk$set(echo = FALSE)
 
 \includegraphics[scale=0.5]{Rplot03.png}
 
+## Asociación entre palabras 
 
+- En minería de texto las palabras pueden asociarse entre sí, de manera similar a lo que entendemos como correlación en estadística. 
+- Entenderemos que dos conceptos están asociados en un texto en la medida en que sea frecuente que aparezcan juntos. 
+- Un ejemplo bastante obvio de esto podrían ser los términos "part" y "time"
+
+
+## Curso 
+
+La palabra \textit{curso} está asociada a los siguientes términos 
+
+\includegraphics[scale=0.5]{curso.png}
+
+## Licencia 
+
+La palabra \textit{licencia} está asociada a los siguientes términos 
+
+\includegraphics[scale=0.5]{licencia.png}
+
+## Lo que viene 
+
+A través de reglas de asociación y análisis de frecuencias, y la propia interpretación de ciertos textos, se pretende entregar información sobre qué ocupaciones generan más discusión en Ñuble 
+
+- Si bien, el grupo es el caballito de batalla, se recurrirá a otras fuentes como las fan pages de las OMIL de la provincia
+- También se extraerá información de otros grupos. 
