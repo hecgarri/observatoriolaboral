@@ -1,0 +1,41 @@
+---
+title: "Percepciones sobre el mercado laboral en Ñuble a través de Facebook"
+subtitle: "Una aplicación sencilla de minería de texto"
+author: "Héctor Garrido Henríquez - Observatorio Laboral Ñuble"
+date: "11 de agosto de 2017"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Motivación 
+
+- Más allá de las estadísticas oficiales, las personas generan mucha información que está disponible en la Web
+- El uso de redes sociales, en particular Facebook, ha fomentado las interacciones sociales entre desconocidos de manera explosiva
+- Es común que las personas interactúen en grupos asociativos para vender artículos, arrendar viviendas y \textbf{buscar empleo}
+
+## No todo lo que brilla es oro
+
+
+-  A pesar de que las redes sociales generan grandes volúmenes de información en tiempo real (Big Data). No reemplazan las estadísticas oficiales de empleo porque 
+
+
+## Word Cloud
+
+\includegraphics[scale=0.5]{Rplot.png}
+
+## Los términos más frecuentes (i)
+
+\includegraphics[scale=0.5]{Rplot01.png}
+
+## Los términos más frecuentes (ii)
+
+\includegraphics[scale=0.5]{Rplot02.png}
+
+## Los términos más frecuentes (iii)
+
+\includegraphics[scale=0.5]{Rplot03.png}
+
+

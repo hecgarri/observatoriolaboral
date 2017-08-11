@@ -10,7 +10,7 @@ setwd("~/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cu
 if (!require(Rfacebook)) devtools::install_github("pablobarbera/Rfacebook/Rfacebook")
 if (!require(data.table)) install.packages("data.table")
 
-token = "EAACEdEose0cBAIC0ZAruTKqvsJQciDxvqZCDwkYvRypGAyrJf7QKYHUPuP3dHZC9nomuBi7FL93W6BXQ5WX4ZCeQ1b8GVbwNwA3Hp0w46cZC34KQZACCagNw0TLWWU8IvyVxMrEFXLxBZCgkrnmxvgcG7IB7rtTZAMtOez1R74wE3B2HkS669wVFcFFXQLTCjIgZD"
+token = "EAACEdEose0cBAMQ2J6OpefeK0ZBUCyiYlKNLQcMIWyYjgMwWVABbuPmxbXtdZCNkZBRbZBTRoBjbdr6DdWxQCSEZALOo1SMpsqGymqMaugxSXI0ZCs1xPSkmKoZB6dvL48V2BONNffzyjhTJXoqT2eDmq4KcaiMYEwYlfaptaSqcgeCAroZCWZAlsZCbvdZCoVqTXwZD"
 
 
 me <- getUsers("me", token, private_info=TRUE) #mis datos como usuario 
@@ -19,34 +19,14 @@ me <- getUsers("me", token, private_info=TRUE) #mis datos como usuario
 # Ojo que o el grupo debe ser público o bien, debo ser el administrador de éste. 
 group3 = getGroup(group_id = 241293439569652, token = token, n=Inf)
 
-
-# Para solucionar un problema con el ENCODING tuve que utilizar la siguiente
-# secuencia de comandos en la consola
-#Si hubiera en el fichero original, caracteres que no pudieran pasarse a la codificación final, el comando se detendría en el primer carácter erróneo y mostraría un mensaje de error. Es posible en estos casos hacer la conversión saltando los caracteres erróneos, para ello usaríamos la opción -c:
-#  
-#  $ iconv -f ascii -t utf8 -o destino.txt origen.txt
-#iconv: secuencia de entrada ilegal en la posición 7
-#$ iconv -c -f ascii -t utf8 -o destino.txt origen.txt
-
-
-# Una vez descargados los datos procedo a guardarlos en un archivo .csv
-
-write.csv(group3, paste0((Sys.Date()-1)," Datos de trabajo en Chillan.csv"), 
-          fileEncoding = "UTF-8")
-
-# Para solucionar un problema con el ENCODING tuve que utilizar la siguiente
-# secuencia de comandos en la consola
-#Si hubiera en el fichero original, caracteres que no pudieran pasarse a la codificación final, el comando se detendría en el primer carácter erróneo y mostraría un mensaje de error. Es posible en estos casos hacer la conversión saltando los caracteres erróneos, para ello usaríamos la opción -c:
-#  
-#  $ iconv -f ascii -t utf8 -o destino.txt origen.txt
-#iconv: secuencia de entrada ilegal en la posición 7
-#$ iconv -c -f ascii -t utf8 -o destino.txt origen.txt
+# Tuve muchas dificultades al guardar el data.frame resultante en un archivo .csv
+# Finalmente, decidí utilizar un archivo .Rdata y el problema se solucionó totalmente 
 
 saveRDS(group3,paste0((Sys.Date()-1)," Datos de trabajo en Chillan.rds"))
 
 list.files(pattern = ".rds$")
 
-posts = readRDS("2017-08-01 Datos de trabajo en Chillan.rds")
+posts = readRDS("2017-08-09 Datos de trabajo en Chillan.rds")
 
 Encoding(posts$message) <- "UTF-8"
 
@@ -72,7 +52,7 @@ inspect(corpus[1]) # para inspeccionar los mensajes
 
 viewDocs = function(d,n){d %>% magrittr::extract2(n) %>% as.character() %>%  writeLines()}
 
-viewDocs(corpus,150)
+viewDocs(corpus,200)
 
 corpus = tm_map(corpus, content_transformer(gsub), pattern = "-", replacement = " ")
 
@@ -83,42 +63,6 @@ corpus = tm_map(corpus, removePunctuation) # Quitar comas, puntos, etcétera
 corpus = tm_map(corpus, content_transformer(tolower))
 #stopwords("spanish")
 
-molestas = c(stopwords("spanish"),"v", "e", "acá", "creo", "tema","entonces",
-             "área", "igual", "ahí","por", "pero", "cgt", "ejemplo", 
-             "por","porque", "entonces", "p", "van", "día", "tener", "hacer", 
-             "aquí", "hoy", "san", "ahora", "ser", "ver", "año", "bien", "bueno", 
-             "años", "hace", "usted", "ustedes", "así", "hecho", "mejor", "mismo", "cómo", "fabián", 
-             "podría", "puede", "veces", "después", "dentro", "obra", "omil", 
-             "vamos", "parte", "cuáles", "persona", "gente", "comuna", 
-             "personas", "sector", "empresas", "cada", "cantidad", 
-             "carlos", "chillán", "cosas", "crecimiento", "fuerte", "grandes", 
-             "hablando", "harto", "importante", "mano", "menos", "provincia", 
-             "siempre", "trabajo", "vez", "vienen", "agua", "comunas", 
-             "cuenta", "decía", "empresa", "futuro","generar", "local", 
-             "menor", "muchas", "nivel", "obviamente", "país", "poder", 
-             "potencial", "realidad", "tiempo", "todavía", "trabajar", 
-             "veo", "afuera", "alguna", "bastante", "cuanto", "decir", 
-             "generan", "hacen", "hacia", "personal", "potenciar", "producción",
-             "productivo", "proyectos", "pueda", "tipo", "trabajan", "viendo", 
-             "visto", "antiguamente", "chile", "ciudad", "claro", "digamos", 
-             "digo", "genera", "lado", "manejo", "mismos", "muchas", 
-             "mucha", "papá", "pasa", "principalmente", "productos", "quiere", 
-             "quizás", "seguir", "sectores", "trabajando", "vecinos", "zona", 
-             "recursos", "allá", "atrás", "cultura", "general", "condiciones", 
-             "gran", "grande", "hijos", "lados", "ligados", 
-             "línea", "meses", "necesita", "permite", "propia", "quieren", 
-             "resulta", "salen", "tan", "iba", "lamentablemente", "debe", 
-             "final", "falta", "dependemos", "crecido", "cambiar", 
-             "cambiado", "verdad", "tampoco", "quedar", "queda", "nuevas", 
-             "necesitan", "mayor", "ido", "dando", "casi", "buenas", 
-             "solo", "solamente", "sentido", "principal", "nueva", "mil", 
-             "mejorar", "mayoría", "intento", "haciendo", "generando", "creciendo", 
-             "existe", "cosa", "cierto", "caballero", "buscar", "buen", "baja", 
-             "algún", "todas", "punto", "pueden", "problema", "ligado", "dado", 
-             "adelante", "aumento", "minuto", "misma", "sé", "poquito", "también", 
-             "esten", "tambien", "duble")
-
-corpus = tm_map(corpus, removeWords, molestas)
 
 #Pattern Matching and Replacement
 toString = content_transformer(function(x,from, to) gsub(from, to, x))
@@ -126,28 +70,36 @@ corpus = tm_map(corpus, toString, "empleo", "trabajo")
 
 dtm = DocumentTermMatrix(corpus)
 
-inspect(dtm[1:5,substr(colnames(dtm), 1, 3) == "agr"])
+inspect(dtm[,substr(colnames(dtm), 1, 3) == "agr"])
 
-inspect(dtm[1:5,substr(colnames(dtm), 1, 3) == "tur"])
+inspect(dtm[,substr(colnames(dtm), 1, 3) == "tur"])
 
 inspect(dtm[1:5,substr(colnames(dtm), 1, 3) == "ser"])
 
-inspect(dtm[1:5,substr(colnames(dtm), 1, 5) == "const"])
+inspect(dtm[,substr(colnames(dtm), 1, 5) == "const"])
 
 inspect(dtm[1:5,substr(colnames(dtm), 1, 4) == "alim"])
 
+inspect(dtm[1:5,substr(colnames(dtm), 1, 3) == "dat"])
 
-
+dato = list(
+  list(word = "dato", syns = c("data", "datito", "datitogracias", "datitos", 
+                               "dato", "datocomunicarse", "datomesirve", 
+                               "datoooooo", "datopara", "datos"))
+)
 turismo = list(
   list(word = "turismo", syns = c("turismo", "turista", "turistas", 
                                   "turística", "turístico", "turísticos"))
 )
 
-agricultura = list(
-  list(word = "agricultura", syns = c("agricultura", "agrícola", "agricultor", 
-                                      "agricultoras", "agricultores","agro", 
-                                      "cosecha"))
+vendedor = list(
+  list(word = "vendedor/a", syns = c("vender", "vendedor", "vendedora", "ventas"))
 )
+gracias = list(
+  list(word = "gracias", syns = c("agradece", "agradecería", "agradeceria", 
+                                  "agradese", "agradezco"))
+)
+
 
 construccion  = list(
   list(word = "construcción", syns = c("constructora", "construcción", 
@@ -178,12 +130,76 @@ replaceSynonyms <- content_transformer(function(x, syn=NULL) {
 
 #corpus <- tm_map(corpus, replaceSynonyms, agropecuario)
 #corpus <- tm_map(corpus, replaceSynonyms, turismo)
+corpus <- tm_map(corpus, replaceSynonyms, vendedor)
 corpus <- tm_map(corpus, replaceSynonyms, servicio)
+corpus <- tm_map(corpus, replaceSynonyms, dato)
+corpus = tm_map(corpus, replaceSynonyms, gracias)
 corpus <- tm_map(corpus, replaceSynonyms, construccion)
 corpus <- tm_map(corpus, replaceSynonyms, agroindustria)
 corpus <- tm_map(corpus, replaceSynonyms, agricultura)
 corpus <- tm_map(corpus, replaceSynonyms, frutales)
 
+molestas = c(stopwords("spanish"),"v", "e", "acá", "creo", "tema","entonces",
+             "área", "igual", "ahí","por", "pero", "cgt", "ejemplo", 
+             "por","porque", "entonces", "p", "van", "día", "tener", "hacer", 
+             "aquí", "hoy", "san", "ahora", "ser", "ver", "año", "bien", "bueno", 
+             "años", "hace", "usted", "ustedes", "así", "hecho", "mejor", "mismo", "cómo", "fabián", 
+             "podría", "puede", "veces", "después", "dentro", "obra", 
+             "vamos", "parte", "cuáles", "persona", "gente", "comuna", 
+             "personas", "cada", "cantidad", 
+             "carlos", "cosas", "crecimiento", "fuerte", "grandes", 
+             "hablando", "harto", "importante", "mano", "menos", "provincia", 
+             "siempre", "trabajo", "vez", "vienen", "agua", "comunas", 
+             "cuenta", "decía", "futuro","generar", "local", 
+             "menor", "muchas", "nivel", "obviamente", "país", "poder", 
+             "potencial", "realidad", "tiempo", "todavía", "trabajar", 
+             "veo", "afuera", "alguna", "bastante", "cuanto", "decir", 
+             "generan", "hacen", "hacia", "personal", "potenciar", "producción",
+             "productivo", "proyectos", "pueda", "tipo", "trabajan", "viendo", 
+             "visto", "antiguamente", "chile", "ciudad", "claro", "digamos", 
+             "digo", "genera", "lado", "mismos", "muchas", 
+             "mucha", "papá", "pasa", "principalmente", "productos", "quiere", 
+             "quizás", "seguir", "sectores", "vecinos", "zona", 
+             "recursos", "allá", "atrás", "cultura", "general", "condiciones", 
+             "gran", "grande", "hijos", "lados", "ligados", 
+             "línea", "meses", "permite", "propia", "quieren", 
+             "resulta", "salen", "tan", "iba", "lamentablemente", "debe", 
+             "final", "falta", "dependemos", "crecido", "cambiar", 
+             "cambiado", "verdad", "tampoco", "quedar", "queda", "nuevas", 
+             "necesitan", "mayor", "ido", "dando", "casi", "buenas", 
+             "solo", "solamente", "sentido", "principal", "nueva", "mil", 
+             "mejorar", "mayoría", "intento", "haciendo", "generando", "creciendo", 
+             "existe", "cosa", "cierto", "caballero", "buscar", "buen", "baja", 
+             "algún", "todas", "punto", "pueden", "problema", "ligado", "dado", 
+             "adelante", "aumento", "minuto", "misma", "sé", "poquito", "también", 
+             "esten", "tambien", "duble", "dato", "necesita", "cualquier", 
+             "busco", "experiencia", "gracias", "hola", "httpelresumenclse",
+             "mas", "disponibilidad", "llamar", "algun", "inmediata", 
+             "interesados", "edad", "necesito","hogar", "interesadas", "alguien", 
+             "inbox", "información", "lunes", "quieres", "esperamos", "sirve", 
+             "urgente", "hrs", "niños", "ganar", "horas", "favor", "obten", 
+             "wasap", "obten", "requisitos", "curriculum", "ofrece", "horario", 
+             "busca", "laboral", "medio", "buena", "requiere", "oportunidad", 
+             "responsable", "contratar","cupos", "ingresos", "interno", 
+             "traslado", "mañana", "celular", "sabe", "consultas", "semana", 
+             "presentar", "quieran", "quieran", "deudas", "asistencia", "aprovecha", 
+             "antecedentes", "comentarios", "contacto", "whatsapp", 
+             "domicilio", "consulta", "dia", "trabaja", "casa", "sólo", 
+             "socios", "extra", "mail", "vigente", "cancela", 
+             "chillan", "enviar","semanal", "chillán", "obtén", 
+             "horarios", "fono", "ganas","regístrate", "viernes", 
+             "pedidos", "etc", "presentarse", "httpspartnersubercomifudtue",
+             "tardes", "aprox", "necesitamos", "numero", "llegan", "días", 
+             "tarde", "villa", "dudas", "comodidad", "comunicarse", "pagos", 
+             "por favor", "hogares", "presencia", "alta", "gana", 
+             "oriente", "platita", "cubrir", "valor", "sábado", "atenta", 
+             "arriba", "decide", "puedes", "verdaderas", 
+             "sueldo","además", "diciembre", "puertas", "gratis", "extras", 
+             "ambiente", "uberdostclgmailcom", "calle", "descuento", 
+             "número","correo", "boleta", "iquique", "pack","premios", 
+             "pago", "venegas", "don", "vida")
+
+corpus = tm_map(corpus, removeWords, molestas)
 
 
 dtm = DocumentTermMatrix(corpus)
@@ -206,15 +222,48 @@ wf = data.frame(word = names(freq), freq = freq) # frecuencia de las palabras
 
 write.csv(wf, file="frecuencia.csv")
 
-subset(wf, freq>150) %>%  ggplot(aes(word, freq))+ geom_bar(stat="identity")+
-  theme(axis.text.x=element_text(angle=45, hjust=1))
+subset(wf, freq>100) %>%  ggplot(aes(x = reorder(word, -freq),y= freq))+ geom_bar(stat="identity")+
+  theme(axis.text.x=element_text(angle=45, hjust=1))+ xlab("Términos") +ylab("Frecuencia")+
+  ggtitle("Los términos más frecuentes", 
+          subtitle = "mencionados más de 100 veces")+labs(caption="Elaboración propia a partir de datos de Facebook")
+
+subset(wf, freq>80 & freq<100) %>%  ggplot(aes(x = reorder(word, -freq),y= freq))+ geom_bar(stat="identity")+
+  theme(axis.text.x=element_text(angle=45, hjust=1))+ xlab("Términos") +ylab("Frecuencia")+
+  ggtitle("Los términos más frecuentes", 
+          subtitle ="mencionados entre 75 y 99 veces")+labs(caption="Elaboración propia a partir de datos de Facebook")
+
+subset(wf, freq>65 & freq<80) %>%  ggplot(aes(x = reorder(word, -freq),y= freq))+ geom_bar(stat="identity")+
+  theme(axis.text.x=element_text(angle=45, hjust=1))+ xlab("Términos") +ylab("Frecuencia")+
+  ggtitle("Los términos más frecuentes", 
+          subtitle ="mencionados entre 60 y 74 veces")+labs(caption="Elaboración propia a partir de datos de Facebook")
+
+head(wf, 150)
+
+findAssocs(dtm, "part",0.6)
+
+findAssocs(dtm, "vendedor",0.6)
+
+findAssocs(dtm, "certificado", 0.6)
+
+findAssocs(dtm, "curso", 0.6)
+
+findAssocs(dtm, "vender", 0.6)
+
+findAssocs(dtm, "aseo", 0.6)
+
+findAssocs(dtm, "licencia", 0.6)
+
+findAssocs(dtm, "maestro", 0.6)
+
+findAssocs(dtm, "comisiones", 0.6)
+
 
 
 set.seed(1234)
 wordcloud(names(freq), freq, min.freq = 2, scale=c(5,0.6), colors=brewer.pal(8, "Dark2"), 
           random.order = FALSE, random.color = TRUE)
 
-require(fpc)
+if (!require(fpc)) install.packages("fpc")
 require(cluster)
 
 
@@ -231,14 +280,5 @@ kfit <- kmeans(d, 2)
 clusplot(as.matrix(d), kfit$cluster, color=T, shade=T, labels=2, lines=0, 
          main="Conglomerados")
 
-write.csv(wf, "frecuencia.csv")
 
-findAssocs(dtm, "turismo", 0.6)
 
-findAssocs(dtm, "comercio", 0.6)
-
-findAssocs(dtm, "agrícola", 0.6)
-
-findAssocs(dtm, "agroindustria", 0.6)
-
-findAssocs(dtm, "servicios", 0.6)
