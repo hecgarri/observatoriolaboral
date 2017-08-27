@@ -1,7 +1,7 @@
-library(data.table) # install.packages("data.table")
-library(dplyr)      # install.packages("dplyr")
-library(stringi)    # install.packages("stringi")
-library(survey)     # install.packages("survey")
+if (!require(data.table))  install.packages("data.table")
+if (!require(dplyr))       install.packages("dplyr")
+if (!require(stringi))     install.packages("stringi")
+if (!require(survey))      install.packages("survey")
 #-------------------------------------------------------------------------------
 sessionInfo()
 #-------------------------------------------------------------------------------
@@ -11,13 +11,13 @@ rm(list=ls())
 #-------------------------------------------------------------------------------
 
 #setwd("C:\\Users\\Miguelo\\Documents\\NENE\\")
-setwd("/home/hector/GoogleDrivePersonal/Observatorio Regional/Bases NENE/NENE/")
+setwd("/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Bases de datos/Nueva Encuesta Nacional de Empleo (ENE)")
 
 #-------------------------------------------------------------------------------
 t <- proc.time() # Inicia el cronometro
 #
-x=seq(1,83,1) # c(seq(1,10,3),seq(61,70,3))
-nene = paste0("nene_",x,".csv")
+
+nene = list.files(pattern=".csv$")
 # ENEs
 # 2010:01-11: Central: 01,04,07,10 
 # 2011:12-23: Central: 13,16,19,22
@@ -26,6 +26,7 @@ nene = paste0("nene_",x,".csv")
 # 2014:48-59: Central: 49,52,55,58
 # 2015:60-71: Central: 61,64,67,70
 # 2016:72-83: Central: 73,76,79,82
+# 2017:84-95: Central:  
 
 # Se importan todas las bases establecidas en la secuencia de una sola vez
 todas =  lapply(nene, function(x) fread(x, sep=",", header=TRUE,
@@ -36,7 +37,9 @@ todas =  lapply(nene, function(x) fread(x, sep=",", header=TRUE,
                                                  "b8", "b9", "b7_3", "b7_4", "b7_1", "b7_2", "b2", 
                                                  "nivel", "curso", "edad", "r_p_c","b1", "sexo",
                                                  "termino_nivel", "c1", "c10", "c11", "habituales", 
-                                                 "e18", "e9", "e12", "e19","b10")))
+                                                 "e18", "e9", "e12", "e19","b10",
+                                                 "b13_rev4cl_caenes", "b14_rev4cl_caenes"),
+                                        fill=TRUE))
 
 #-------------------------------------------------------------------------------
 # CREACION DE LA VARIABLES region_e y prov_e
@@ -97,11 +100,18 @@ for (i in 1:length(todas)){
   todas[[i]]$sector = todas[[i]]$b14
 }
 
+
 for (i in 1:length(todas)){
   todas[[i]]$sector = ifelse(is.na(todas[[i]]$sector),
                              todas[[i]]$e18,
                              todas[[i]]$sector)
 }
+for (i in 1:length(todas)){
+  todas[[i]]$sector = ifelse(is.na(todas[[i]]$sector), 
+                             todas[[i]]$b13_rev4cl_caenes, 
+                             todas[[i]]$sector)
+}
+
 
 for (i in 1:length(todas)){
   todas[[i]]$sector<-factor(todas[[i]]$sector,
@@ -259,7 +269,7 @@ for (i in 1:length(todas)){
                                           ifelse(educ==6,2,
                                           ifelse(educ==7,4,
                                           ifelse(educ==8,4,
-                                          ifelse(educ==9,5,NA))))))))))   
+                                          ifelse(educ==9,5,NA)))))))))))   
 }
 
 
@@ -342,8 +352,6 @@ for (i in 1:length(todas)){
 }
 
 #-------------------------------------------------------------------------------
-apiladas =do.call(rbind, todas)
-#-------------------------------------------------------------------------------
 # Incorporar el info y realizar inferencia para muestras complejas
 #-------------------------------------------------------------------------------
 #Para evitar clusters con una sola observacion
@@ -355,11 +363,6 @@ for (i in 1:length(todas)){
   info[[i]] = svydesign(id = ~id_directorio, strata = ~estrato, weights  = 
                           ~fact,nest = TRUE, data = todas[[i]])
 }
-
-# info muestral de la ENE apilada
-
-info2 = svydesign(id = ~id_directorio, strata = ~estrato, weights  = 
-                    ~fact,nest = TRUE, data = apiladas)
 
 proc.time()-t    # Detiene el cronometro
 
