@@ -16,7 +16,7 @@ setwd("/home/hector/GoogleDrivePersonal/Observatorio Regional/Bases NENE/NENE/")
 #-------------------------------------------------------------------------------
 t <- proc.time() # Inicia el cronometro
 #
-x=seq(73,82,3) # c(seq(1,10,3),seq(61,70,3))
+x=seq(1,83,1) # c(seq(1,10,3),seq(61,70,3))
 nene = paste0("nene_",x,".csv")
 # ENEs
 # 2010:01-11: Central: 01,04,07,10 
@@ -36,7 +36,7 @@ todas =  lapply(nene, function(x) fread(x, sep=",", header=TRUE,
                                                  "b8", "b9", "b7_3", "b7_4", "b7_1", "b7_2", "b2", 
                                                  "nivel", "curso", "edad", "r_p_c","b1", "sexo",
                                                  "termino_nivel", "c1", "c10", "c11", "habituales", 
-                                                 "e18", "e9", "e12", "e19")))
+                                                 "e18", "e9", "e12", "e19","b10")))
 
 #-------------------------------------------------------------------------------
 # CREACION DE LA VARIABLES region_e y prov_e
