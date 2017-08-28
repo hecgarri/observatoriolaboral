@@ -6,7 +6,7 @@
 #por el número total de personas que trabajan en el sector a nivel regional.  
 #Base de datos: Serie de ocupados por rama y región.
 
-setwd("/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cuantitativo/Reporte Sectorial/Reporte-Sectorial-/")
+setwd("/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cuantitativo/GitHub/observatoriolaboral/Reporte-Sectorial/grafico_10_evolucion_tasa_conmutacion")
 
 for (i in 1:length(info)){
   info[[i]]$variables = mutate(info[[i]]$variables,

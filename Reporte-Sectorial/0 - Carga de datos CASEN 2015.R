@@ -10,7 +10,8 @@ library(foreign) # Para importar conjuntos de datos en múltiples formatos
 library(dplyr) # Para manipular objetos de tipo data frame
 library(survey) # Para trabajar muestras complejas 
 
-setwd("/home/hector/GoogleDrivePersonal/Observatorio Regional/Bases NENE/NENE/BasesCASEN/")
+setwd("~/GoogleDrivePersonal/Observatorio Regional/Bases NENE/NENE/BasesCASEN/")
+
 
 list.files()
 
