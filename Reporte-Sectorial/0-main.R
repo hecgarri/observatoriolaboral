@@ -2,6 +2,7 @@ if (!require(data.table))  install.packages("data.table")
 if (!require(dplyr))       install.packages("dplyr")
 if (!require(stringi))     install.packages("stringi")
 if (!require(survey))      install.packages("survey")
+if (!require(parallel)) install.packages("parallel")
 #-------------------------------------------------------------------------------
 sessionInfo()
 #-------------------------------------------------------------------------------
@@ -29,7 +30,7 @@ nene = list.files(pattern=".csv$")
 # 2017:84-95: Central:  
 
 # Se importan todas las bases establecidas en la secuencia de una sola vez
-todas =  lapply(nene, function(x) fread(x, sep=",", header=TRUE,
+todas =  mclapply(nene,mc.cores=4, function(x) fread(x, sep=",", header=TRUE,
                                         select=c("id_directorio", "estrato", "nacionalidad", 
                                                  "fact", "cae_general", "mes_central", 
                                                  "ano_trimestre", "b18_codigo", "region", 

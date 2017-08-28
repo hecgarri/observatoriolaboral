@@ -1,3 +1,5 @@
+setwd("/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cuantitativo/GitHub/observatoriolaboral/Reporte-Sectorial")
+
 iure = lapply(1:length(info), function(x) svyby(~I(b10==1 | b10==2), by=~sector, 
             design = subset(info[[x]], prov_e==84), svytotal, na.rm=TRUE, na.rm.all = TRUE) %>% 
                 filter(sector=="Agropecuario-Silvicola")) %>% rbindlist() %>%
@@ -11,5 +13,5 @@ ocup_agro = lapply(1:(length(info)), function(x) svyby(~I(cae_general=="Ocupado"
 
 
 trabajadores = cbind(iure, ocup_agro)
-write.csv(iure, "trabajadores y temporeros agro.csv")
+write.csv(trabajadores, "trabajadores y temporeros agro.csv")
 

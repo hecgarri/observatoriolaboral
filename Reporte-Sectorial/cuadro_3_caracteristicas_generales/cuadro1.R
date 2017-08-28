@@ -6,7 +6,7 @@
 #como edad, sexo, región de trabajo –código
 #de la región donde se ubica el trabajo del individuo. 
 
-setwd("/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cuantitativo/Reporte Sectorial/Reporte-Sectorial-/")
+setwd("/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cuantitativo/GitHub/observatoriolaboral/Reporte-Sectorial")
 
 edad_sector = lapply(1:4, function(x) svyby(~edad,by=~sector,
                       design = subset(info[[x]], prov_e==84),
