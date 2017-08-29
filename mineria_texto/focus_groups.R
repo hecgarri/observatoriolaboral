@@ -38,8 +38,7 @@ molestas = c(stopwords("spanish"),"v", "e", "acá", "creo", "tema","entonces",
              "años", "hace", "usted", "ustedes", "así", "hecho", "mejor", "mismo", "cómo", "fabián", 
              "podría", "puede", "veces", "después", "dentro", "obra", "omil", 
              "vamos", "parte", "cuáles", "persona", "gente", "comuna", 
-             "personas", "sector", "empresas", "cada", "cantidad", 
-             "carlos", "chillán", "cosas", "crecimiento", "fuerte", "grandes", 
+             "personas", "sector", "empresas", "cada", "cantidad", "cosas", "crecimiento", "fuerte", "grandes", 
              "hablando", "harto", "importante", "mano", "menos", "provincia", 
              "siempre", "trabajo", "vez", "vienen", "agua", "comunas", 
              "cuenta", "decía", "empresa", "futuro","generar", "local", 
@@ -70,7 +69,20 @@ molestas = c(stopwords("spanish"),"v", "e", "acá", "creo", "tema","entonces",
              "prectica", "sfaper", "sed", "med", "después", "afo", "diría", "incluso", 
              "voy", "dos", "haber", "forma", "súper", "dar", "toda", "buena", "posibilidad", 
              "x", "r", "e", "a", "c", "l", "m", "s", "h", "f", "v", "p", "n", "ir", 
-             "si")
+             "si", "llega", "dice", "llegan", "llegó", "piden", "repente", 
+             "dicen", "vas", "sabe", "hacemos", "sacar", "cuesta", "llegar", 
+             "oye", "dije", "nunca", "empezar", "dónde", "ojalá", 
+             "viene", "diga", "doy", "cuál", "dan", "deja", "red", 
+             "sur", "etc", "aun", "salir", "salió", "salí",
+             "demás", "harta", "querían", "uso", "pasó", "deriva", 
+             "tanta", "chuta", "hizo", "cierta", "ven", "tanta", 
+             "iban", "corto", "afán", "tiro", "llevo", "darle", 
+             "llevar", "loco", "sino",
+             "ayer", "vana", "tal", "fin", "cuales", "mira", 
+             "mañana", "sabes", "sacas", "trajo", "echar", 
+             "alto", "unas", "don", "dan", "aún", "sale", 
+             "derivada", "saca", "pase", "pura", "invité",
+             "peor", "caso")
 
 docs = tm_map(docs, removeWords, molestas)
 
@@ -132,7 +144,9 @@ vino = list(
                                     "viña", "viñedos", "vitivinicola", "viñas"))
 )
 
-
+trabajo = list(
+  list(word ="trabajo", syns=c("pega", "trabaja", "trabajo"))
+)
 
 replaceSynonyms <- content_transformer(function(x, syn=NULL) { 
   Reduce(function(a,b) {
@@ -150,7 +164,7 @@ docs <- tm_map(docs, replaceSynonyms, frutales)
 docs <- tm_map(docs, replaceSynonyms, región)
 docs <- tm_map(docs, replaceSynonyms, arándano)
 docs <- tm_map(docs, replaceSynonyms, vino)
-
+docs <- tm_map(docs, replaceSynonyms, trabajo)
 dtm = DocumentTermMatrix(docs)
 
 #dtm <- removeSparseTerms(dtm, 0.8) # This makes a matrix that is only 20% empty space, maximum.   
@@ -171,42 +185,40 @@ wf = data.frame(word = names(freq), freq = freq) # frecuencia de las palabras
 
 write.csv(wf, file="frecuencia.csv")
 
-subset(wf, freq>20) %>%  ggplot(aes(word, freq))+ geom_bar(stat="identity")+
+subset(wf, freq>15) %>%  ggplot(aes(x = reorder(word, -freq),y= freq))+ geom_bar(stat="identity")+
   theme(axis.text.x=element_text(angle=45, hjust=1))
 
 
-png("nube_transversal.png")
-set.seed(1234)
+#png("nube_transversal.png")
+#set.seed(1234)
 wordcloud(names(freq), freq, min.freq = 2, scale=c(5,0.6), colors=brewer.pal(8, "Dark2"), 
           random.order = FALSE, random.color = TRUE)
-dev.off()
+#dev.off()
 
 
-library(fpc)
-library(cluster)
+#library(fpc)
+#library(cluster)
 
 
-d = dist(t(dtm), method="euclidian")
+#d = dist(t(dtm), method="euclidian")
 
-fit = hclust(d=d, method="ward.D")
+#fit = hclust(d=d, method="ward.D")
 
-plot(fit, hang=-1)
+#plot(fit, hang=-1)
 
 
-par(bty="l", family="times", bg="white")
-d <- dist(t(dtm), method="euclidian")   
-kfit <- kmeans(d, 2)   
-clusplot(as.matrix(d), kfit$cluster, color=T, shade=T, labels=2, lines=0, 
-         main="Conglomerados")
+#par(bty="l", family="times", bg="white")
+#d <- dist(t(dtm), method="euclidian")   
+#kfit <- kmeans(d, 2)   
+#clusplot(as.matrix(d), kfit$cluster, color=T, shade=T, labels=2, lines=0, 
+#         main="Conglomerados")
 
 write.csv(wf, "frecuencia.csv")
 
-findAssocs(dtm, "turismo", 0.9)
+findAssocs(dtm, "programa", 0.9)
+findAssocs(dtm, "inmigrante", 0.9)
+findAssocs(dtm, "alimentos", 0.9)
+findAssocs(dtm, "agricultura", 0.9)
+findAssocs(dtm, "cocina", 0.9)
+findAssocs(dtm, "curso", 0.9)
 
-findAssocs(dtm, c("control", "calidad"), 0.9)
-
-findAssocs(dtm, "agrícola", 0.6)
-
-findAssocs(dtm, "agroindustria", 0.6)
-
-findAssocs(dtm, "servicios", 0.6)
