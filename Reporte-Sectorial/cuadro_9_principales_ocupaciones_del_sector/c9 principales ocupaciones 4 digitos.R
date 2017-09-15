@@ -11,7 +11,6 @@ ocupaciones_sector = svyby(~I(activ==1), by=~oficio4+rama1, design=subset(diseñ
                      svytotal, multicore=TRUE,
                      drop.empty.groups=FALSE, na.rm=TRUE) %>% 
   `colnames<-` (c("codigo", "sector", "no_ocupado", "ocupado", "se_no_ocupado", "se_ocupado")) %>% 
-  select(codigo, sector, ocupado, se_ocupado) %>% 
   mutate(cv = se_ocupado/ocupado) 
 
 temp = xtabs(~oficio4+rama1, data=subset(diseño$variables, provincia==84)) %>% data.frame() 
@@ -27,6 +26,9 @@ ocupaciones_sector = filter(ocupaciones_sector, frecuencia>=5 & sector==8)
 # % sobre el total del sector 
 
 ocupas = as.character(ocupaciones_sector$codigo)
+
+merge(ocupaciones_sector, ciuo, by="codigo")
+
 porc_hoteles = lapply(ocupas, function(x) svyby(~I(oficio4==x), denominator=~I(activ==1),
                                                 by = ~rama1, svyratio,
                                                 design = subset(diseño, provincia==84),
