@@ -3,16 +3,16 @@
 # de actividad económica, Ñuble, 2015
 ###################################################################################################
 
-diseño$variables$educ2 = ifelse(diseño$variables$educ==0 | diseño$variables$educ==1, "Sin educación formal",
-                          ifelse(diseño$variables$educ==2, "Básica completa", 
-                          ifelse(diseño$variables$educ==3 | diseño$variables$educ==4, "Básica completa", 
+diseño$variables$educ2 = ifelse(diseño$variables$educ==0 | diseño$variables$educ==1, "Básica completa o menor",
+                          ifelse(diseño$variables$educ==2, "Básica completa o menor", 
+                          ifelse(diseño$variables$educ==3 | diseño$variables$educ==4, "Básica completa o menor", 
                           ifelse(diseño$variables$educ==5 | diseño$variables$educ==6, "Media completa", 
                           ifelse(diseño$variables$educ==7, "Media completa", 
-                          ifelse(diseño$variables$educ==8, "Técnico Nivel Superior Completo", 
+                          ifelse(diseño$variables$educ==8, "técnico nivel superior o profesional", 
                           ifelse(diseño$variables$educ==9, "Media completa", 
-                          ifelse(diseño$variables$educ==10, "Profesional Completo", 
-                          ifelse(diseño$variables$educ==11, "Profesional Completo", 
-                          ifelse(diseño$variables$educ==12, "Profesional Completo", NA))))))))))
+                          ifelse(diseño$variables$educ==10, "técnico nivel superior o profesional", 
+                          ifelse(diseño$variables$educ==11, "técnico nivel superior o profesional", 
+                          ifelse(diseño$variables$educ==12, "técnico nivel superior o profesional", NA))))))))))
 
 #-------- Economicamente Activos 
 educ_jov_num_nacional = svyby(~I((activ==1 | activ==2) & edad>=15 & edad<=29 & asiste==2), by=~educ2,

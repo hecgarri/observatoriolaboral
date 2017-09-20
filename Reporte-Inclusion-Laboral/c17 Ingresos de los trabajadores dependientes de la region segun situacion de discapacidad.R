@@ -5,16 +5,17 @@
 diseño$variables$dependiente = recode_factor(diseño$variables$o15, `3` = 11, `4`=11,
                                              `5`=11, `6`=11, `7`=11)
 
-diseño$variables = mutate(diseño$variables, nivel_educ = ifelse(educ==0 | educ==1, "Sin educación formal",
-                          ifelse(educ==2, "Básica completa", 
-                          ifelse(educ==3 | educ==4, "Básica completa", 
+diseño$variables = mutate(diseño$variables,
+                          nivel_educ = ifelse(educ==0 | educ==1, "Básica completa o menor",
+                          ifelse(educ==2, "Básica completa o menor", 
+                          ifelse(educ==3 | educ==4, "Básica completa o menor", 
                           ifelse(educ==5 | educ==6, "Media completa", 
                           ifelse(educ==7, "Media completa", 
-                          ifelse(educ==8, "Técnico Nivel Superior Completo", 
+                          ifelse(educ==8, "Técnico Nivel Superior o Profesional", 
                           ifelse(educ==9, "Media completa", 
-                          ifelse(educ==10, "Profesional Completo", 
-                          ifelse(educ==11, "Profesional Completo", 
-                          ifelse(educ==12, "Profesional Completo", NA)))))))))))
+                          ifelse(educ==10, "Técnico Nivel Superior o Profesional", 
+                          ifelse(educ==11, "Técnico Nivel Superior o Profesional", 
+                          ifelse(educ==12, "Técnico Nivel Superior o Profesional", NA)))))))))))
 
 diseño$variables =mutate(diseño$variables, discapacitado = ifelse(s34_1a!=1 |
                                             s34_1b!=1 |s34_1c!=1 |s34_1d!=1 |
