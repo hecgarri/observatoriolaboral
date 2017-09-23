@@ -17,25 +17,29 @@ diseño$variables = mutate(diseño$variables,
                           ifelse(educ==11, "Técnico Nivel Superior o Profesional", 
                           ifelse(educ==12, "Técnico Nivel Superior o Profesional", NA)))))))))))
 
+
 diseño$variables =mutate(diseño$variables, discapacitado = ifelse(s34_1a!=1 |
                                             s34_1b!=1 |s34_1c!=1 |s34_1d!=1 |
                                             s34_1e!=1 |s34_1f!=1 |s34_1g!=1 |
                                             s34_1h!=1 |s34_1i!=1 |
                                             s34_1j!=1,1, 0))
 
+diseño$variables = mutate(diseño$variables, horas_mensuales=o10*4, 
+                          ingreso_hora = yoprCor/horas_mensuales)
 
-ing_promedio = svyby(~yoprCor, by=~I(discapacitado==1)+I(dependiente==11)+nivel_educ,
-                     subset(diseño, provincia==84), svymean, na.rm=TRUE,
+ing_promedio = svyby(~yoprCor, denominator = ~horas_mensuales,
+                     by=~I(discapacitado==1)+I(dependiente==11)+nivel_educ,
+                     subset(diseño, provincia==84), svyratio, na.rm=TRUE,
                      na.rm.all=TRUE, multicore=TRUE, drop.empty.groups = FALSE) %>% 
-  `colnames<-` (c("discapacitado", "dependiente", "educación", "yoprCor", "se")) %>% 
-  mutate(cv = se/yoprCor) %>% filter(dependiente==TRUE)
+  `colnames<-` (c("discapacitado", "dependiente", "educación", "ingreso_hora", "se")) %>% 
+  mutate(cv = se/ingreso_hora) %>% filter(dependiente==TRUE)
 
 
-ing_promedio2 = svyby(~yoprCor, by=~I(discapacitado==1)+I(dependiente==11),
-                     subset(diseño, provincia==84), svymean, na.rm=TRUE,
+ing_promedio2 = svyby(~yoprCor, denominator = ~horas_mensuales, by=~I(discapacitado==1)+I(dependiente==11),
+                     subset(diseño, provincia==84), svyratio, na.rm=TRUE,
                      na.rm.all=TRUE, multicore=TRUE, drop.empty.groups = FALSE) %>% 
-  `colnames<-` (c("discapacitado", "dependiente", "yoprCor", "se")) %>% 
-  mutate(cv = se/yoprCor) %>% filter(dependiente==TRUE)
+  `colnames<-` (c("discapacitado", "dependiente", "ingreso_hora", "se")) %>% 
+  mutate(cv = se/ingreso_hora) %>% filter(dependiente==TRUE)
 
 
 numero = svyby(~I(dependiente==11), by=~I(discapacitado==1)+nivel_educ,
@@ -60,7 +64,7 @@ ing_promedio$confiable = ifelse(ing_promedio$cv>=0.25 | ing_promedio$freq<=50, "
 ###############################################################
 
 diseño$variables = mutate(diseño$variables, 
-                  ingreso_hora = yoprCor/(o10*4))
+                  ingreso_hora = ingreso_hora)
 
 niveles = names(table(diseño$variables$nivel_educ))
 options(survey.lonely.psu = "certainty")
@@ -76,10 +80,10 @@ for (i in 1:length(diseños)){
 
 contraste_ = list()
 for (i in 1:length(diseños)){
-  contraste_[[i]] = svyttest(yoprCor~discapacitado, design = diseños[[i]])
+  contraste_[[i]] = svyttest(ingreso_hora~discapacitado, design = diseños[[i]])
 }
 
-contraste = svyttest(yoprCor~discapacitado, design = subset(diseño, provincia==84))
+contraste = svyttest(ingreso_hora~discapacitado, design = subset(diseño, provincia==84))
   
 numero = svyby(~I(discapacitado==1), by=~I(provincia==84)+I(dependiente==11)+nivel_educ, diseño, svytotal, 
                na.rm=TRUE, na.rm.all=TRUE, multicore=TRUE, drop.empty.groups = FALSE) %>% 

@@ -2,8 +2,8 @@
 # Cuadro 10. Distribución de jóvenes que no estudian ni trabajan (NINI), según edad y género
 ############################################################################################
 
-diseño$variables$ tramo_jov = cut(diseño$variables$edad, breaks = c(14,24,29),
-                                  labels= c("15-24", "25-29"))
+diseño$variables = mutate(diseño$variables, tramo_jov = ifelse(edad>=15 & edad<=24,"15-24", 
+                                                        ifelse(edad>=25 & edad<=29, "25-29", NA)))
 
 jov_nini_sexo_nacional = svyby(~I(edad>=15 & edad<=29 & asiste==2 & activ==3),
                                    by=~sexo+tramo_jov, diseño, svytotal, multicore=TRUE,

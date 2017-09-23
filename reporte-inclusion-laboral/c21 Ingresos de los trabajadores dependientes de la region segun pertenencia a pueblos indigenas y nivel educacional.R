@@ -1,5 +1,5 @@
 ##############################################################################################################
-# Cuadro 21. Ingresos de los trabajadores dependientes de la región según situación de discapacidad y nivel educacional
+# Cuadro 21. Ingresos de los trabajadores dependientes de Ñuble según pertenencia a pueblos indigenas y nivel educacional
 ##############################################################################################################
 
 diseño$variables$dependiente = recode_factor(diseño$variables$o15, `3` = 11, `4`=11,
