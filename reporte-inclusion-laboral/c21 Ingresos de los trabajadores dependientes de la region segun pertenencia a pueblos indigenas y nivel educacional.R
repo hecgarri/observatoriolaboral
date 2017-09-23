@@ -18,17 +18,20 @@ diseño$variables = mutate(diseño$variables,
                   ifelse(educ==12, "Técnico Nivel Superior o Profesional", NA)))))))))))
 
 diseño$variables = mutate(diseño$variables, indigena = ifelse(r3!=10 & r3!=99, 1,
-                                   ifelse(r3==10, 0,NA)))
+                                   ifelse(r3==10, 0,NA)), 
+                          horas_mensuales = o10*4, 
+                          ingreso_hora = yoprCor/horas_mensuales)
 
-ing_promedio = svyby(~yoprCor, by=~I(indigena==1)+I(dependiente==11)+nivel_educ,
-                     subset(diseño, provincia==84), svymean, na.rm=TRUE,
+
+ing_promedio = svyby(~yoprCor, denominator = ~horas_mensuales, by=~I(indigena==1)+I(dependiente==11)+nivel_educ,
+                     subset(diseño, provincia==84), svyratio, na.rm=TRUE,
                      na.rm.all=TRUE, multicore=TRUE, drop.empty.groups = FALSE) %>% 
   `colnames<-` (c("indigena", "dependiente", "educación", "yoprCor", "se")) %>% 
   mutate(cv = se/yoprCor) %>% filter(dependiente==TRUE)
 
 
-ing_promedio2 = svyby(~yoprCor, by=~I(indigena==1)+I(dependiente==11),
-                      subset(diseño, provincia==84), svymean, na.rm=TRUE,
+ing_promedio2 = svyby(~yoprCor, denominator = ~horas_mensuales, by=~I(indigena==1)+I(dependiente==11),
+                      subset(diseño, provincia==84), svyratio, na.rm=TRUE,
                       na.rm.all=TRUE, multicore=TRUE, drop.empty.groups = FALSE) %>% 
   `colnames<-` (c("indigena", "dependiente", "yoprCor", "se")) %>% 
   mutate(cv = se/yoprCor) %>% filter(dependiente==TRUE)
