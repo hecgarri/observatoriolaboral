@@ -14,7 +14,10 @@ diseño$variables = mutate(diseño$variables, cat_ocup =
 ingreso_cat_sect = svyby(~yoprCor, by=~rama1+cat_ocup,
                     design = subset(diseño, provincia==84), 
                     svymean, na.rm=TRUE, na.rm.all=TRUE, drop.empty.groups = FALSE) %>% 
-  filter(rama1==8)
+  mutate(cv = se/yoprCor) 
+
+
+frecuencia = subset(diseño$variables, provincia==84) %>% group_by(rama1, cat_ocup) %>% count()
 
 ingreso_cat = svyby(~yoprCor, by=~cat_ocup,
                     design = subset(diseño, provincia==84), 

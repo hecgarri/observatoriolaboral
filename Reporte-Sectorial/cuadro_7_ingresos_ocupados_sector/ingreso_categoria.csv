@@ -1,6 +1,91 @@
-"","cat_ocup","yoprCor","se","rama1","cat_ocup","yoprCor","se"
-"Dependiente contrato","Dependiente contrato",409857.226440639,31867.8065992717,"8","Dependiente contrato",254902.077733382,21468.2693512234
-"Dependiente sin Contrato","Dependiente sin Contrato",201367.649362781,16109.708116108,"8","Dependiente sin Contrato",209482,27757.4339441724
-"No remunerado","No remunerado",NA,NA,"8","No remunerado",NA,NA
-"Patrón o empleador","Patrón o empleador",754439.364587369,272684.182684753,"8","Patrón o empleador",658891.56626506,118881.645985817
-"Trabajador por cuenta propia","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"8","Trabajador por cuenta propia",237797.619047619,45721.2186243135
+"","cat_ocup","yoprCor","se","rama1","cat_ocup","yoprCor","se","cv"
+"1","Dependiente contrato",409857.226440639,31867.8065992717,"1","Dependiente contrato",267277.703979931,30284.3943354905,0.113306848586834
+"2","Dependiente sin Contrato",201367.649362781,16109.708116108,"2","Dependiente contrato",779255.319148936,321403.079440977,0.412449002968626
+"3","No remunerado",NA,NA,"3","Dependiente contrato",562713.037144938,61816.8696352388,0.109855051428845
+"4","Patrón o empleador",754439.364587369,272684.182684753,"4","Dependiente contrato",387769.851240527,46486.8420583795,0.119882558970642
+"5","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"5","Dependiente contrato",402468.847039474,61668.4094372418,0.153225299028408
+"6","Dependiente contrato",409857.226440639,31867.8065992717,"6","Dependiente contrato",398831.386482368,41616.5011275183,0.104346103486412
+"7","Dependiente sin Contrato",201367.649362781,16109.708116108,"7","Dependiente contrato",295916.236562845,21321.2268420153,0.0720515612447215
+"8","No remunerado",NA,NA,"8","Dependiente contrato",254902.077733382,21468.2693512234,0.0842216334292825
+"9","Patrón o empleador",754439.364587369,272684.182684753,"9","Dependiente contrato",337611.091511461,20012.7545506413,0.0592775387237593
+"10","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"10","Dependiente contrato",456508.991549296,49458.3829140663,0.108340435412268
+"11","Dependiente contrato",409857.226440639,31867.8065992717,"11","Dependiente contrato",412099.680654119,63652.5347230197,0.154459073159157
+"12","Dependiente sin Contrato",201367.649362781,16109.708116108,"12","Dependiente contrato",576589.369198312,50145.2086207193,0.0869686666100712
+"13","No remunerado",NA,NA,"13","Dependiente contrato",516909.614540182,41285.3196441347,0.0798695139011104
+"14","Patrón o empleador",754439.364587369,272684.182684753,"14","Dependiente contrato",666452.854282536,119407.339881297,0.179168472479338
+"15","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"15","Dependiente contrato",351411.998243303,53551.6239106164,0.152389856289254
+"16","Dependiente contrato",409857.226440639,31867.8065992717,"16","Dependiente contrato",196497.855249015,8711.51625863564,0.0443338999685052
+"17","Dependiente sin Contrato",201367.649362781,16109.708116108,"17","Dependiente contrato",NA,NA,NA
+"18","No remunerado",NA,NA,"99","Dependiente contrato",264857.142857143,24995.2731891302,0.0943726603688842
+"19","Patrón o empleador",754439.364587369,272684.182684753,"1","Dependiente sin Contrato",164768.102482561,12189.1699040043,0.0739777282152922
+"20","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"2","Dependiente sin Contrato",NA,NA,NA
+"21","Dependiente contrato",409857.226440639,31867.8065992717,"3","Dependiente sin Contrato",163636.363636364,16362.8015481185,0.0999948983496128
+"22","Dependiente sin Contrato",201367.649362781,16109.708116108,"4","Dependiente sin Contrato",200725.259515571,13125.7870690526,0.0653918052004532
+"23","No remunerado",NA,NA,"5","Dependiente sin Contrato",NA,NA,NA
+"24","Patrón o empleador",754439.364587369,272684.182684753,"6","Dependiente sin Contrato",251002.581807265,52819.1584068013,0.210432729522117
+"25","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"7","Dependiente sin Contrato",147475.660515186,12050.4874949122,0.0817117038351644
+"26","Dependiente contrato",409857.226440639,31867.8065992717,"8","Dependiente sin Contrato",209482,27757.4339441724,0.132505102797245
+"27","Dependiente sin Contrato",201367.649362781,16109.708116108,"9","Dependiente sin Contrato",318964.682945154,116959.234639206,0.366683965005986
+"28","No remunerado",NA,NA,"10","Dependiente sin Contrato",NA,NA,NA
+"29","Patrón o empleador",754439.364587369,272684.182684753,"11","Dependiente sin Contrato",258062.834123223,84580.3920466987,0.327751155388429
+"30","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"12","Dependiente sin Contrato",607135.526520052,129503.220529483,0.213301997449833
+"31","Dependiente contrato",409857.226440639,31867.8065992717,"13","Dependiente sin Contrato",290849.922239502,77839.9699173763,0.267629330336484
+"32","Dependiente sin Contrato",201367.649362781,16109.708116108,"14","Dependiente sin Contrato",426492.127868852,119172.75907699,0.279425460142693
+"33","No remunerado",NA,NA,"15","Dependiente sin Contrato",258468.176914779,94101.6603799535,0.364074453974194
+"34","Patrón o empleador",754439.364587369,272684.182684753,"16","Dependiente sin Contrato",102331.90990991,8795.47185962639,0.0859504319558745
+"35","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"17","Dependiente sin Contrato",85000,0,0
+"36","Dependiente contrato",409857.226440639,31867.8065992717,"99","Dependiente sin Contrato",1e+05,0,0
+"37","Dependiente sin Contrato",201367.649362781,16109.708116108,"1","No remunerado",NA,NA,NA
+"38","No remunerado",NA,NA,"2","No remunerado",NA,NA,NA
+"39","Patrón o empleador",754439.364587369,272684.182684753,"3","No remunerado",NA,NA,NA
+"40","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"4","No remunerado",NA,NA,NA
+"41","Dependiente contrato",409857.226440639,31867.8065992717,"5","No remunerado",NA,NA,NA
+"42","Dependiente sin Contrato",201367.649362781,16109.708116108,"6","No remunerado",NA,NA,NA
+"43","No remunerado",NA,NA,"7","No remunerado",NA,NA,NA
+"44","Patrón o empleador",754439.364587369,272684.182684753,"8","No remunerado",NA,NA,NA
+"45","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"9","No remunerado",NA,NA,NA
+"46","Dependiente contrato",409857.226440639,31867.8065992717,"10","No remunerado",NA,NA,NA
+"47","Dependiente sin Contrato",201367.649362781,16109.708116108,"11","No remunerado",NA,NA,NA
+"48","No remunerado",NA,NA,"12","No remunerado",NA,NA,NA
+"49","Patrón o empleador",754439.364587369,272684.182684753,"13","No remunerado",NA,NA,NA
+"50","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"14","No remunerado",NA,NA,NA
+"51","Dependiente contrato",409857.226440639,31867.8065992717,"15","No remunerado",NA,NA,NA
+"52","Dependiente sin Contrato",201367.649362781,16109.708116108,"16","No remunerado",NA,NA,NA
+"53","No remunerado",NA,NA,"17","No remunerado",NA,NA,NA
+"54","Patrón o empleador",754439.364587369,272684.182684753,"99","No remunerado",NA,NA,NA
+"55","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"1","Patrón o empleador",288017.366136035,50400.5085776903,0.174991214084936
+"56","Dependiente contrato",409857.226440639,31867.8065992717,"2","Patrón o empleador",1e+06,0,0
+"57","Dependiente sin Contrato",201367.649362781,16109.708116108,"3","Patrón o empleador",NA,NA,NA
+"58","No remunerado",NA,NA,"4","Patrón o empleador",660121.633362294,164148.988699301,0.248664761770065
+"59","Patrón o empleador",754439.364587369,272684.182684753,"5","Patrón o empleador",NA,NA,NA
+"60","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"6","Patrón o empleador",423381.294964029,103164.91927794,0.243669053179841
+"61","Dependiente contrato",409857.226440639,31867.8065992717,"7","Patrón o empleador",1163967.23229959,718733.823176726,0.617486303078103
+"62","Dependiente sin Contrato",201367.649362781,16109.708116108,"8","Patrón o empleador",658891.56626506,118881.645985817,0.180426722806151
+"63","No remunerado",NA,NA,"9","Patrón o empleador",1080000,135764.501987817,0.125707872210942
+"64","Patrón o empleador",754439.364587369,272684.182684753,"10","Patrón o empleador",NA,NA,NA
+"65","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"11","Patrón o empleador",1e+06,0,0
+"66","Dependiente contrato",409857.226440639,31867.8065992717,"12","Patrón o empleador",NA,NA,NA
+"67","Dependiente sin Contrato",201367.649362781,16109.708116108,"13","Patrón o empleador",1500000,0,0
+"68","No remunerado",NA,NA,"14","Patrón o empleador",NA,NA,NA
+"69","Patrón o empleador",754439.364587369,272684.182684753,"15","Patrón o empleador",NA,NA,NA
+"70","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"16","Patrón o empleador",NA,NA,NA
+"71","Dependiente contrato",409857.226440639,31867.8065992717,"17","Patrón o empleador",NA,NA,NA
+"72","Dependiente sin Contrato",201367.649362781,16109.708116108,"99","Patrón o empleador",NA,NA,NA
+"73","No remunerado",NA,NA,"1","Trabajador por cuenta propia",225588.012770138,64940.2101826459,0.287870837573345
+"74","Patrón o empleador",754439.364587369,272684.182684753,"2","Trabajador por cuenta propia",171428.571428571,26470.1642004328,0.154409291169191
+"75","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"3","Trabajador por cuenta propia",NA,NA,NA
+"76","Dependiente contrato",409857.226440639,31867.8065992717,"4","Trabajador por cuenta propia",196363.082082082,33681.6949201918,0.171527634232755
+"77","Dependiente sin Contrato",201367.649362781,16109.708116108,"5","Trabajador por cuenta propia",NA,NA,NA
+"78","No remunerado",NA,NA,"6","Trabajador por cuenta propia",232179.207765264,30606.6054272991,0.131823196925725
+"79","Patrón o empleador",754439.364587369,272684.182684753,"7","Trabajador por cuenta propia",219700.029137654,18798.1375757635,0.085562745028065
+"80","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"8","Trabajador por cuenta propia",237797.619047619,45721.2186243135,0.192269455040918
+"81","Dependiente contrato",409857.226440639,31867.8065992717,"9","Trabajador por cuenta propia",379052.831601968,97360.4938715164,0.256852042128396
+"82","Dependiente sin Contrato",201367.649362781,16109.708116108,"10","Trabajador por cuenta propia",NA,NA,NA
+"83","No remunerado",NA,NA,"11","Trabajador por cuenta propia",705770.246478873,267428.792963464,0.378917635445361
+"84","Patrón o empleador",754439.364587369,272684.182684753,"12","Trabajador por cuenta propia",497500,192509.821178038,0.386954414428216
+"85","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"13","Trabajador por cuenta propia",196745.454545455,39547.0619836932,0.201006229470763
+"86","Dependiente contrato",409857.226440639,31867.8065992717,"14","Trabajador por cuenta propia",483947.368421053,128702.750939724,0.265943694165823
+"87","Dependiente sin Contrato",201367.649362781,16109.708116108,"15","Trabajador por cuenta propia",202389.119532265,48374.481789436,0.239017205575244
+"88","No remunerado",NA,NA,"16","Trabajador por cuenta propia",85008.1120764553,11946.0016171407,0.140527784058969
+"89","Patrón o empleador",754439.364587369,272684.182684753,"17","Trabajador por cuenta propia",NA,NA,NA
+"90","Trabajador por cuenta propia",244818.92377721,27293.9503400168,"99","Trabajador por cuenta propia",NA,NA,NA

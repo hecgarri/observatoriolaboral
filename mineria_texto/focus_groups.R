@@ -82,7 +82,7 @@ molestas = c(stopwords("spanish"),"v", "e", "acá", "creo", "tema","entonces",
              "mañana", "sabes", "sacas", "trajo", "echar", 
              "alto", "unas", "don", "dan", "aún", "sale", 
              "derivada", "saca", "pase", "pura", "invité",
-             "peor", "caso")
+             "peor", "caso", "dio", "ves", "frente")
 
 docs = tm_map(docs, removeWords, molestas)
 
