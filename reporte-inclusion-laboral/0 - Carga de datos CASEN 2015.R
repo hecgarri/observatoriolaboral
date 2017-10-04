@@ -24,10 +24,6 @@ directorio.casen = data.frame(names(directorio.casen),directorio.casen)
 
 casen2015 = data.frame(casen2015)
 
-diseño = svydesign(id = ~varunit, strata = ~varstrat,weights = ~expr, nest = TRUE, data = casen2015)
+diseno = svydesign(id = ~varunit, strata = ~varstrat,weights = ~expr, nest = TRUE, data = casen2015)
 
-#setwd("/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cuantitativo/GitHub/observatoriolaboral/Reporte-Inclusion-Laboral")
 
-#x = list.files(pattern =".R$")
-
-#lapply(x, function(x) source(x))
