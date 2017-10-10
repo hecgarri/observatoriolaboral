@@ -10,7 +10,8 @@ library(foreign) # Para importar conjuntos de datos en múltiples formatos
 library(dplyr) # Para manipular objetos de tipo data frame
 library(survey) # Para trabajar muestras complejas 
 
-setwd("/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Bases de datos/Encuesta de Caracterización Socioeconómica Nacional (CASEN)/")
+setwd("C:\\Users\\Usuario\\Google Drive\\OLR Ñuble - Observatorio laboral de Ñuble\\Bases de datos\\Encuesta de Caracterización Socioeconómica Nacional (CASEN)\\")
+#setwd("/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Bases de datos/Encuesta de Caracterización Socioeconómica Nacional (CASEN)/")
 
 list.files()
 
@@ -23,10 +24,6 @@ directorio.casen = data.frame(names(directorio.casen),directorio.casen)
 
 casen2015 = data.frame(casen2015)
 
-diseño = svydesign(id = ~varunit, strata = ~varstrat,weights = ~expr, nest = TRUE, data = casen2015)
+diseno = svydesign(id = ~varunit, strata = ~varstrat,weights = ~expr, nest = TRUE, data = casen2015)
 
-#setwd("/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cuantitativo/GitHub/observatoriolaboral/Reporte-Inclusion-Laboral")
 
-#x = list.files(pattern =".R$")
-
-#lapply(x, function(x) source(x))
