@@ -222,3 +222,4 @@ findAssocs(dtm, "agricultura", 0.9)
 findAssocs(dtm, "cocina", 0.9)
 findAssocs(dtm, "curso", 0.9)
 
+findAssocs(dtm, "agroindustria",0.9)

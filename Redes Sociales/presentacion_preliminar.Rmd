@@ -30,8 +30,6 @@ Lo anterior implica que utilicemos las redes sociales para medir percepciones, m
 
 - Para extrear los posts sobre empleo es necesario que los grupos sean: (i) públicos o (ii) ser administrador de dicho grupo. 
 - Los grupos en Facebook son por defecto cerrados. De los grupos chillanenses con actividad importante todos son cerrados. 
-- Me contacté con un usuario y le pedí que me cediera la administración de un grupo, explicándole mi labor en el OLR Ñuble. Dicha persona accedió amablemente. 
-- Esto ahorra mucho trabajo en la medida en que el grupo ya tenía actividad y muchos miembros. 
 
 ## Datos de trabajo en Chillán
 

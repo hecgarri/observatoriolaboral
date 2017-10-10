@@ -10,7 +10,7 @@ setwd("~/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cu
 if (!require(Rfacebook)) devtools::install_github("pablobarbera/Rfacebook/Rfacebook")
 if (!require(data.table)) install.packages("data.table")
 
-token = "EAACEdEose0cBAMQ2J6OpefeK0ZBUCyiYlKNLQcMIWyYjgMwWVABbuPmxbXtdZCNkZBRbZBTRoBjbdr6DdWxQCSEZALOo1SMpsqGymqMaugxSXI0ZCs1xPSkmKoZB6dvL48V2BONNffzyjhTJXoqT2eDmq4KcaiMYEwYlfaptaSqcgeCAroZCWZAlsZCbvdZCoVqTXwZD"
+token = "EAACEdEose0cBAKAfbytJMf5n4Lt12YOMLy9JeqZB6cglpXqNtuQ9K1mcpvYHsd7lSzxwTKDwQxWazL7zMbVPY93kRpfCgnqC3DzxllMwYaLipAUsZBo12ZC1hqxxOTaZApjXUnnTZBxHdivKF5OZBH3dPZCSYXkfUyDfXy2kzMzqkXZB3gRzN2tiNZBgtYtl4WBEZD"
 
 
 me <- getUsers("me", token, private_info=TRUE) #mis datos como usuario 
@@ -26,7 +26,7 @@ saveRDS(group3,paste0((Sys.Date()-1)," Datos de trabajo en Chillan.rds"))
 
 list.files(pattern = ".rds$")
 
-posts = readRDS("2017-08-09 Datos de trabajo en Chillan.rds")
+posts = readRDS("2017-10-08 Datos de trabajo en Chillan.rds")
 
 Encoding(posts$message) <- "UTF-8"
 
