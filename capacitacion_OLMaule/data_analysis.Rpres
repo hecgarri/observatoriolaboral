@@ -1,0 +1,535 @@
+Introducción a R
+========================================================
+author: Héctor Garrido Henríquez.
+date: 29 de noviembre de 2016
+font-import: http://fonts.googleapis.com/css?family=Risque
+font-family: 'Risque'
+Observatorio Laboral Ñuble
+
+R como una calculadora
+========================================================
+
+```{r}
+2+2
+2*3*4*5
+sqrt(10) #La ra?z cuadrada de 10
+pi# entrega el valor de pi
+```
+
+R como una calculadora
+========================================================
+
+```{r, echo=TRUE}
+2*pi*6378 #Circunferencia de la tierra (radio=6378Kms)#
+3*4^2
+3*4^2; (3*4)^2
+```
+
+¿Cómo ingresar datos?
+========================================================
+class:ilustration
+
+Ejemplo: Emisiones de Carbon como resultado del uso de combustibles fosiles
+
+```{r}
+Year<-c(1800,1850,1900,1950,2000)
+Year
+Carbon<-c(8,54,534,1630,6611)
+Carbon
+```
+
+
+
+Un diagrama sencillo de dispersión
+========================================
+
+Graficamos Carbon en función de Year
+```{r, fig.align='center',fig.height=5, fig.width=6}
+plot(Carbon~Year,pch=16)
+```
+
+Un diagrama sencillo de dispersión 
+========================================
+
+Algunas observaciones
+
+  - Year y Carbon son vectores que son formados concatenando números separados (c())
+  - El Grafico Carbon~Year, significa Carbon en función de Year
+  - pch=16, significa plot character, generando un punto negro solido #
+
+Construcción de un Data Frame
+=======================================
+
+Se unen los dos vectores Year y Carbon, utilizando la función data frame
+
+```{r}
+fossilfuel<-data.frame(year=Year, carbon=Carbon)
+fossilfuel #muestra los contenidos del data frame
+```
+
+Construcción de un Data Frame 
+=====================================
+
+muestra el rango de los datos de carbon ($ es un conector)
+
+  - El rango nos muestra los datos máximo y mínimo
+
+```{r}
+range(fossilfuel$carbon) 
+```
+
+Podemos remover los vectores que ahora ya no sirven
+```{r}
+rm(Year, Carbon)  
+```
+
+  - La función rm() remueve los objetos no deseados
+
+La misma gráfica anterior 
+===================================
+```{r, fig.align='center'}
+plot(carbon~year, data=fossilfuel, pch=16) #Gr?fico de la emisi?n de carbon en el tiempo#
+
+```
+
+Manipulación de carácteres
+================================
+
+Ejemplo: Cuatro ciudades
+```{r}
+cuatrociudades<-c("Talca","Concepción","Chillán", "Los Angeles")
+sort(cuatrociudades) 
+```
+
+Manipulación de carácteres
+====================================
+
+Ejemplo: Cuatro ciudades
+
+sort ordena las ciudades en orden alfabético
+```{r}
+nchar("Talca") #muestra el n?mero de letras en Talca
+nchar(cuatrociudades) #muestra el n?mero de letras de cada ciudad
+```
+
+¿Qué son los paquetes?
+===============================================
+
+Los paquetes son colecciones de funciones de R, datos y código compilado en un formato bien definido.
+  - El directorio donde están alojados los paquetes se denomina librería
+  - R por defecto trae un conjunto de paquetes básicos 
+  - Una infinidad de paquetes están disponibles para su descarga e instalación 
+  - Una vez instalados, deben ser cargados en la sesión para poder trabajar con ellos.
+
+¿Qué son los paquetes?
+====================================
+
+Para ver todos los paquetes instalados podemos tipear
+```{r,eval=FALSE}
+library()
+```
+Mientras que para ver los paquetes que están cargados 
+```{r, eval=FALSE}
+search()
+```
+
+Instalando un paquete
+==========================
+Utilizaremos el paquete 'Daag'
+```{r, eval=FALSE}
+install.packages("DAAG") #Para instalar el paquete
+```
+  - Para cargarlo en nuestra sesión de trabajo 
+```{r}
+library(DAAG)
+```
+
+  - Para qué sirve el paquete
+
+```{r}
+?DAAG
+```
+
+¿Qué elementos tiene?
+======================================
+
+```{r}
+ls("package:DAAG")
+```
+
+Un ejemplo
+================
+Trabajemos con el paquete 'AER' y 'fBasics'
+```{r, eval=FALSE}
+install.packages("AER")
+install.packages("fBasics")
+```
+```{r}
+library(AER)
+library(fBasics)
+```
+```{r}
+data("CPS1985")
+?CPS1985
+```
+
+CPS1985
+===============
+```{r}
+class(CPS1985)
+View(CPS1985)
+str(CPS1985) # Muestra  la descripci?n de las variables
+
+```
+
+Exploremos los datos
+===========================
+```{r, eval=FALSE}
+head(CPS1985,n=3) # Entrega  las primeras 6 filas 
+tail(CPS1985,n=3) #Entrega las ?ltimas 6 filas
+
+```
+```{r, eval=FALSE}
+attach(CPS1985) #Las variables quedan accesibles por sus nombres
+names(CPS1985) #Entrega los nombres de las variables da la base CPS1985
+colnames(CPS1985) #Entrega nombres de la variable
+summary(CPS1985$gender)
+
+```
+
+Trabajando con subconjuntos de datos 
+======================================
+```{r, eval=FALSE}
+female<-subset(CPS1985,gender=="female")#genera un subset de mujeres
+head(female,10)
+female<-subset(CPS1985,subset=(gender=="female"))# Otra forma de subset
+female2<-subset(CPS1985,subset=(gender=="female"),select=c("wage","gender","age"))
+head(female2,10)
+female3<-subset(CPS1985,gender=="female"& age<30)
+head(female3,10)
+female4<-subset(CPS1985,gender=="female" & age<30 & age>20)
+head(female4,10)
+
+```
+
+Resúmenes estadísticos 
+========================
+
+Recuerden, siempre es útil conocer los datos con los que estamos trabajando a través de la estadística descriptiva
+```{r, eval=FALSE}
+summary(CPS1985$wage) #Resumen estad?stico b?sico de la variable wage
+head(CPS1985$wage) #Los 6 primeros datos de wage
+head(CPS1985[,c("wage","age","sector")])#Los 6 de diferentes variables
+mean(CPS1985$wage) #Media de la variable wage
+median(CPS1985$wage) #Mediana de la variable wage
+var(CPS1985$wage)#varianza de la variable wage
+sd(CPS1985$wage) #desviaci?n standard de la variable wage
+```
+
+Transformemos el salario a pesos
+===================================
+```{r}
+CPS1985$wagepesos<-CPS1985$wage*680.79 #Creamos una variable wage en pesos
+head(CPS1985$wagepesos)
+```
+
+Estadísticos por grupos 
+==================================
+
+Obtengamos el salario promedio de los hombres mayores de 30.
+```{r}
+mean(CPS1985$wage[CPS1985$gender=="male" & CPS1985$age>30])
+```
+Ahora el salario promedio de los hombres de entre 20 y 30 años 
+```{r}
+mean(CPS1985$wage[CPS1985$gender=="male" & CPS1985$age<30&CPS1985$age>20])
+
+```
+
+Estadísticos por grupos 
+==============================
+
+Ahora un resumen estadístico de los salarios de los hombres mayores de 30
+```{r}
+summary(CPS1985$wage[CPS1985$gender=="male" & CPS1985$age>30])
+```
+
+La función Apply 
+=================
+Suele ocurrir que tengamos que realizar muchas estadísticas sobre varias variables. En ese caso, podemos usar apply
+
+```{r, eval=FALSE}
+apply(CPS1985[ ,c("wage","age")],MARGIN=2,FUN=mean)
+apply(CPS1985[ ,c("wage","age")],MARGIN=2,FUN=sum)
+apply(CPS1985[ ,c("wage","age")],MARGIN=2,FUN=summary)
+
+
+```
+
+Gráficos: Histogramas
+======================
+
+```{r, fig.align='center'}
+hist(CPS1985$wage)
+```
+
+Gráficos: Histogramas 
+=======================
+```{r, fig.align='center'}
+hist(CPS1985$wage, freq=FALSE)
+```
+
+Gráficos: Histogramas 
+=======================
+```{r, fig.align='center'}
+hist(log(CPS1985$wage),freq=FALSE)
+
+```
+
+Gráficos: Histogramas 
+========================
+```{r, fig.align='center'}
+hist(log(CPS1985$wage),freq=FALSE)
+lines(density(log(CPS1985$wage)), col=4)
+
+```
+
+Gráficos: Histogramas
+=======================
+```{r, fig.align='center'}
+hist(log(CPS1985$wage),freq=FALSE,
+     col="lightblue",border="red",main="Salario",
+     xlab="Log Salario")
+rug(log(CPS1985$wage)) 
+
+```
+
+Gráficos: Diagramas de dispersión 
+===================================
+
+```{r, fig.align='center'}
+plot(CPS1985$age,CPS1985$wage)
+
+```
+
+Gráficos: Diagramas de dispersión 
+====================================
+```{r, fig.align='center', fig.height=5, fig.width=5}
+plot(CPS1985$age,CPS1985$wage,main="Salario-Edad",
+     xlab="Edad",ylab="Salario $/hr")
+abline(v=mean(CPS1985$age),lty=2,col="blue")
+abline(h=mean(CPS1985$wage),lty=2,col="blue")
+abline(lm(CPS1985$wage~CPS1985$age),col="red")
+legend("topright",legend=c("Age","Wage"),lty=c(2,1))
+```
+
+¿Mejores gráficos? ¡usa ggplot!
+============================
+
+```{r, eval=FALSE}
+install.packages("ggplot2")
+```
+```{r}
+library(ggplot2)
+```
+
+```{r, eval=FALSE}
+g1.1<-qplot(wage,data=CPS1985, geom="histogram",
+            xlab="pesos",ylab="freq",binwidth=0.25)
+g1.1
+```
+
+¿Mejores gráficos? ¡usa ggplot!
+=================================
+```{r, echo=FALSE, fig.align='center'}
+g1.1<-qplot(wage,data=CPS1985, geom="histogram",xlab="pesos",
+            ylab="freq",binwidth=0.25)
+g1.1
+```
+
+¿Mejores gráficos? ¡usa ggplot!
+=================================
+```{r, fig.align='center'}
+g1.2<-qplot(wage,data=CPS1985,geom="histogram",
+            xlab="Pesos",ylab="Freq")
+g1.2
+```
+
+¿Mejores gráficos? ¡usa ggplot!
+==================================
+```{r, fig.align='center'}
+g1.3<-qplot(wage,data=CPS1985,geom="histogram",
+xlab="Pesos/hora",ylab="Freq", facets=~gender)
+g1.3
+```
+
+Diferenciemos por sexo y por sindicado
+========================================
+```{r, fig.align='center'}
+g1.4<-qplot(wage,data=CPS1985,
+            geom="histogram",xlab="Pesos/hora",
+            ylab="Freq", facets=gender~union)
+g1.4
+```
+
+Coloreemos las barras en función del sexo 
+===========================================
+```{r, fig.align='center', fig.width=5, fig.height=5}
+g1.5<-qplot(wage,data=CPS1985,geom="histogram",
+xlab="Pesos/hora",ylab="Freq", fill=gender)
+g1.5 
+
+```
+
+Diagramas de dispersión, de nuevo
+==================================
+```{r, fig.align='center', fig.width=5, fig.height=5}
+g1.6<-qplot(education,wage,data=CPS1985,
+            geom=c("point"),xlab="Edu",ylab="Salario/hora",
+            colour=gender)
+g1.6
+
+```
+
+
+
+Agreguemos una recta de regresión
+==================================
+
+```{r, eval=FALSE, fig.align='center', fig.width=5, fig.height=5}
+plot.x <- qplot(y=wage, x=education, data=CPS1985)
+model.x <- lm(wage ~ education, data=CPS1985)
+plot.x + geom_abline(intercept=coef(model.x)[1],
+  slope=coef(model.x)[2])
+```
+
+Agreguemos una recta de regresión 
+===================================
+```{r, fig.align='center', echo=FALSE}
+plot.x <- qplot(y=wage, x=education, data=CPS1985)
+model.x <- lm(wage ~ education, data=CPS1985)
+plot.x + geom_abline(intercept=coef(model.x)[1],
+  slope=coef(model.x)[2])
+
+```
+
+Diagrama de cajas
+====================
+```{r, eval=FALSE}
+g1.8<-qplot(gender,wage,data=CPS1985,
+            geom="boxplot",facets=~ethnicity,
+            colour=gender,xlab="sexo",
+            ylab="Salario")
+g1.8
+
+```
+
+Diagrama de cajas
+=====================
+```{r, echo=FALSE, fig.align='center'}
+g1.8<-qplot(gender,wage,data=CPS1985,geom="boxplot",
+facets=~ethnicity,colour=gender,xlab="sexo",ylab="Salario")
+g1.8
+
+```
+
+Diagramas de cajas
+=======================
+
+Puede que queramos ver la dispersión de salarios dependiendo de ciertos tramos de educación 
+
+```{r, eval=FALSE}
+CPS1985$edu<-cut(CPS1985$education,c(0,5,10,15,20),right=FALSE) 
+g1.9<-qplot(edu,wage,data=CPS1985, geom="boxplot",xlab="Edu",
+ylab="Pesos")
+g1.9
+```
+
+Diagramas de cajas
+=====================
+
+```{r, echo=FALSE, fig.align='center'}
+CPS1985$edu<-cut(CPS1985$education,c(0,5,10,15,20),right=FALSE) 
+g1.9<-qplot(edu,wage,data=CPS1985, geom="boxplot",xlab="Edu",
+ylab="Pesos")
+g1.9
+
+```
+
+Diagramas de cajas
+====================
+
+Unamos las medias
+```{r, eval=FALSE}
+g2.9<-qplot(edu,wage,data=CPS1985, geom="boxplot",xlab="Edu",
+ylab="Pesos")
+g2.9<-g2.9+stat_summary(fun.y=mean,geom="point",
+                        colour="red",shape=15)
+g2.9<-g2.9+stat_summary(fun.y=mean, geom="line",aes(group=1),
+colour="red")
+g2.9
+```
+
+Diagramas de cajas
+====================
+```{r, echo=FALSE, fig.align='center'}
+g2.9<-qplot(edu,wage,data=CPS1985, geom="boxplot",xlab="Edu",
+ylab="Pesos")
+g2.9<-g2.9+stat_summary(fun.y=mean,geom="point",
+                        colour="red",shape=15)
+g2.9<-g2.9+stat_summary(fun.y=mean, geom="line",aes(group=1),
+colour="red")
+g2.9
+```
+
+Variables categóricas
+=======================
+
+```{r}
+summary(CPS1985$occupation)
+table(CPS1985$occupation)
+```
+
+Variables categóricas
+=======================
+
+```{r}
+tab<-table(CPS1985$occupation)
+prop.table(tab)
+```
+
+Gráfico de barras
+==================
+```{r, fig.align='center'}
+barplot(tab)
+
+```
+
+Gráfico de pastel
+==================
+```{r, fig.align='center'}
+pie(tab)
+```
+
+Tablas de contingencia
+==========================
+```{r}
+xtabs(~gender+occupation, data=CPS1985)
+```
+
+Género y ocupación 
+=====================
+
+```{r, fig.align='center'}
+plot(gender~occupation, data=CPS1985)
+```
+
+Relación entre variable categórica y continua
+==============================================
+```{r, eval=TRUE}
+tapply(CPS1985$wage,CPS1985$gender, mean)
+tapply(CPS1985$wage, CPS1985$gender, summary)
+tapply(log(CPS1985$wage),CPS1985$gender,mean)
+
+```
+

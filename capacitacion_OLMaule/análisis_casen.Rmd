@@ -1,0 +1,326 @@
+---
+title: Análisis Encuesta de Caracterización Socioeconómica Nacional CASEN | Región
+  del Bío-Bío
+author: "Héctor Garrido Henríquez"
+date: "29/11/2017"
+output: html_document
+---
+
+En este documento realizaremos algunos análisis con la base de datos de la encuesta de Caracterización Socioeconómica Nacional (CASEN) para su última versión, 2013. Esto con el fin de familiarizarse aún más con el análisis descriptivo de datos y conocer cómo trabajar con una encuesta de diseño muestral complejo. 
+
+En primer lugar, es recomendable antes de realizar cualquier análisis borrar todos los objetos que pueden estar guardados en sesiones de trabajo previas. Esto con el fin de evitar confundir al programa con el nombre de algún objeto ya utilizado, entre otras razones. Para ello utilizaremos la siguiente función
+
+```{r}
+
+rm(list=ls())
+
+```
+
+Esta función ha eliminado todos los objetos que previamente pueden haber estado guardados en el *environment* (una de las pestañas que aparecen arriba a la derecha en **Rstudio**). Note que si tipeamos lo siguiente 
+```{r}
+ls()
+```
+Ha aparecido el mensaje *character(0)* esto quiere decir que el *environment* está vacío. 
+
+Pues bien, para trabajar con la encuesta CASEN necesitamos importar dicha base de datos hacia **R**. En general, este tipo de bases de datos se guardan en formatos más conocidos para el público en general, como Stata o SPSS, por lo que hemos de utilizar un paquete llamado *foreign* para importar ese tipo de objetos y poder trabajarlos con R. 
+
+En este caso, trabajaremos con el archivo **casen.dta**, donde la extensión .dta indica que dicha base ha sido creada con Stata. Para determinar la ubicación de dicho archivo en nuestro computador utilizaremos el siguiente comando **file.choose()**
+
+```{r, eval=FALSE}
+file.choose()
+```
+Al ejecutar dicho comando se abrirá una ventana que nos permitirá navegar en nuestro computador para determinar dónde está alojado el archivo. En mi caso, el archivo lo tengo guardado en  "/home/hector/Base de Datos/CASEN/Stata/casen2013.dta". 
+
+Una vez determinada la ubicación del archivo, procedamos a instalar el paquete *foreign*, de la siguiente forma
+
+```{r, eval=FALSE}
+install.packages("foreign")
+```
+
+Una vez instalado el paquete hemos de cargarlo, como es habitual, a través de *library*
+```{r}
+if (!require(foreign)) install.packages("foreign"); require(foreign)
+```
+
+Luego, para cargar la base de datos en formato Stata, lo haremos a través de la siguiente orden 
+
+```{r, message=FALSE, warning=FALSE}
+setwd("/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Bases de datos/Encuesta de Caracterización Socioeconómica Nacional (CASEN)/")
+casen<- read.spss("Casen 2015 SPSS.sav", use.value.labels = FALSE, 
+                  to.data.frame = FALSE) 
+```
+Note que la función *read.dta* es una función provista por el paquete *foreign*, si no la ha cargado o instalado, no funcionará. 
+
+Ahora, en su pestaña *environment* ha aparecido un objeto de nombre *casen*, el cual puede mirar, tipeando: 
+```{r, eval=FALSE}
+View(casen)
+```
+Puede verificar la clase del objeto a través de la siguiente orden 
+```{r}
+class(casen)
+```
+Para ver el listado de variables de la base de datos utilizaremos la siguiente orden 
+```{r}
+names(casen)[1:10]
+```
+sólo he pedido un número reducido de variables de la casen, pues tiene una cantidad enorme de ellas (por algo es la encuesta más importante del país), para hacerse una idea de ello tipee lo siguiente: 
+```{r}
+dim(casen)
+```
+
+La orden anterior nos muestra las dimensiones del objeto con el que estamos trabajando. Note que dicho objeto tiene 31315 filas y 600 columnas, o dicho de otra forma la encuesta tiene 31315 observaciones (individuos) y 600 variables. 
+
+Para determinar el tamaño del objeto podemos tipear
+```{r}
+
+format(object.size(casen), units="MB")
+
+```
+El objeto tiene un tamaño no menor, de 79.8 MegaBytes. 
+
+###Creación de un directorio de variables
+
+Como ya hemos visto, al utilizar la orden *names* aparece el nombre de las variables de la encuesta, aunque dichos nombres no son muy informativos. Para tener una perspectiva más clara es necesario crear un directorio de variables. El directorio no será más que un nuevo *data.frame* en el que tendremos cada una de las variables y sus respectivas etiquetas. 
+
+Realizaremos lo siguiente: 
+```{r}
+etiquetas <- attr(casen,"variable.labels") #Para extraer las etiquetas de las variables
+diccionario.variables <- data.frame(var.name=names(casen),etiquetas) #Para hacer una tabla
+
+casen = data.frame(casen)
+```
+Una vez creado el directorio ahora puede acceder a los nombres y "descripción" de cada una de las variables tipeando 
+```{r, eval=FALSE}
+View(diccionario.variables)
+```
+
+##Probabilidades desiguales de selección y factores de expansión
+
+Cuando analizamos datos desde una muestra es fundamental conocer el diseño muestral a través del cual se han recogido dichos datos. El más común de todos ellos es el **muestreo aleatorio simple** o MAS. Sin embargo, no todas las muestras, en especial las encuestas de hogares, son recolectados de esa manera. Para utilizar el MAS es necesario disponer de un marco muestral (o listado de las unidades a muestrear) que no siempre está disponible. En particular, en el caso chileno, no tenemos una lista actualizada de las personas que viven en cada hogar como para realizar un muestreo de esa naturaleza. 
+
+La encuesta CASEN, por tanto, tampoco está recogida bajo un esquema de MAS. Por lo tanto, lamento informarles que todos los métodos aprendidos durante la mayoría de los cursos de Estadística y Econometría no sirven para analizar directamente la encuesta, pues debemos utilizar variaciones de ellos. 
+
+La encuesta CASEN está recogida bajo un esquema de muestreo multietápico, en donde se estratifican las comunas en dos grupos: urbano y rural; y luego se seleccionan al azar conglomerados, los cuales usualmente son manzanas, y de estos conglomerados se seleccionan viviendas al azar (Para el lector interesado adjunto Informe de Diseño Muestral de la Encuesta). Note entonces que hay tres etapas involucradas: selección de estratos, selección de conglomerados (*unidad primaria de muestreo*) y selección de viviendas (*unidad secundaria de muestreo*). 
+
+En un muestreo multietápico el principal problema con el que debemos lidiar es que las probabilidades de selección de cada una de las unidades muestrales (en este caso, viviendas) no son iguales. Por ejemplo: cuando usted tiene una población de 1000 individuos y recoge una muestra de 100 individuos, la probabilidad de escoger a cada uno es de $100/1000=0.1$. De manera análoga, podemos pensar que cada individuo representa a 10 individuos (1/0.1), valor que denominaremos factor de expansión o peso. Como en un diseño muestral complejo las probabilidades de selección son desiguales, cada unidad observada en la muestra representa un número diferente de unidades en la población. Por ejemplo, tipee lo siguiente
+
+```{r}
+head(casen$expr,15)
+```
+Lo que acabamos de hacer ha sido solicitar el factor de expansión regional de la encuesta, note que los primeros 8 individuos representan a 123 individuos cada uno, mientras que los siguientes 7 representan a 49 individuos cada uno. Para realizar cualquier inferencia sobre nuestros datos debemos incorporar entonces dichos factores de expansión. Si ignoramos este detalle, el estimador puntual que calcularemos estará sesgado, es decir, no sirve para nada. 
+
+Para ilustrar porqué dicho valor está sesgado vamos a calcular el ingreso autónomo promedio de los hogares de la región del Bío-bío a través de la orden *mean*
+```{r}
+mean(casen$yautcorh)
+```
+Note que si calculasemos la media del ingreso directamente a través del comando *mean* obtendríamos un ingreso autónomo promedio de \$541.074 pesos mensuales. Lamentablemente, dicho valor es erróneo. Para calcular adecuadamente el ingreso autónomo promedio debemos tipear 
+```{r}
+weighted.mean(casen$yautcorh, casen$expr)
+```
+Note que además del objeto *yautcorh* hemos utilizado también el objeto *expr*, nuestro factor de expansión (número de individuos que representa cada observación de la muestra en la población). El valor es muy distinto, de \$577.799 pesos, en lugar de los \$541.074 que obtuvimos sin considerar los factores de expansión. 
+
+>Por lo tanto, **siempre que trabajemos con una muestra compleja (es decir, que no ha sido obtenida según muestreo aleatorio simple) hemos de considerar los factores de expansión para generar estimaciones insesgadas**
+
+##Diseño muestral complejo y precisión de los estimadores
+
+Si bien el uso de los factores de expansión *elimina el problema de sesgo al realizar una estimación*, al trabajar con una muestra compleja es necesario también corregir los errores estándar para poder realizar inferencia estadísticamente válida.
+
+En particular, en ciertos esquemos de muestreo se presenta el problema denominado **correlación intracluster**. El problema de la correlación intracluster puede ser entendido mejor a través de un ejemplo: 
+
+> Suponga que en la ciudad de Chillán, ha decidido llevar a cabo 
+un muestreo por conglomerados, es decir, como no dispone de un listado de todas las personas de la ciudad, ha decidido seleccionar ciertos barrios al azar y encuestará todas las viviendas de ese barrio. El problema consiste en que las personas de determinados barrios tienen características muy similares entre sí. Por ejemplo, las personas que viven en el centro de la ciudad se parecen, las que lo hacen en la periferia también, mientras que las que viven en algún otro barrio, también se parecen. En términos estadísticos esto significa que existe correlación entre ellas, lo que en particular viola el principio de muestra aleatoria, es decir que las observaciones sean **igual e independientemente distribuidas**. Las observaciones ya no serán independientes entre sí. Esto, en términos concretos, implica que ahora **el error estándar de sus estimaciones estará sesgado**. 
+
+El tratamiento estadístico de estas situaciones es complicado y debido a que el curso no persigue dichos objetivos, no abordaremos en detalle la teoría estadística detrás de lo que acabamos de ilustrar. Sin embargo, en este apunte aprenderemos a utilizar el paqute **survey** de *R* el cual permite realizar cálculos estadísticos correctos al momento de trabajar con una muestra tomada bajo un esquema muestral complejo. 
+
+## Incorporando el diseño muestral complejo al análisis 
+
+Para que podamos trabajar correctamente en **R** con la encuesta **CASEN** debemos instalar en primer lugar el paquete *Survey* a través de la siguiente orden 
+```{r, eval=FALSE}
+install.packages("survey")
+```
+Luego, naturalmente, cargarlo 
+```{r, message=FALSE}
+library(survey)
+```
+Para informar al programa cómo se ha seleccionado la muestra, y por tanto, realizar cálculo estadísticos correctos debemos utilizar los siguientes comandos 
+```{r}
+options(survey.lonely.psu="adjust") #Para evitar clusters con una sola observación
+design<-svydesign(ids=casen$varunit, strata=casen$varstrat, weights=casen$expr, nest=TRUE, data=casen)
+```
+
+Acabamos de crear un objeto llamado *design* el cual tiene los siguientes componentes:
+
+- *id* indica la unidad primaria de muestreo, en nuestro caso dicha variable se llama *varunit* que no es más que un identificador de cada conglomerado en la muestra 
+- *weights* indica qué factor de expansión utilizaremos, en nuestro caso el factor de expansión regional (esto indica a cuántos individuos de la población representa cada individuo de la muestra)
+- *nest* indica que aquellos conglomerados con pocas observaciones serán combinados. 
+- *data* indica cuál es la base de datos (data.frame) con el que estamos trabajando.
+
+### Cálculo de la media para una variable continua
+
+Dicho lo anterior, ahora podemos calcular el ingreso promedio de los hogares de la región a través de la siguiente orden 
+```{r}
+svymean(casen$yautcorh, design)
+```
+- La función *svymean* permite calcular la media corrigiendo los errores estándar y considerando los factores de expansión. 
+- Note que en el argumento de la función hemos incluido al objeto *design*, con esto el paquete tiene toda la información necesaria para calcular correctamente la media. 
+
+La estimación coincide con la que realizamos anteriormente utilizando los factores de expansión, pero ahora además nos muestra el error estándar del estimador. 
+
+###Cálculo de una proporción para una variable categórica
+
+Para calcular una proporción de manera correcta es necesario utilizar la orden 
+```{r}
+svyciprop(~sexo=="hombre", design, method="logit")
+```
+Note que en el argumento de la función hemos incluido las siguientes elementos 
+
+- *~sexo=="hombre"* a través de esto estamos solicitando que nos muestre la proporción de hombres en la población 
+- *design* para que tenga en cuenta el diseño muestral complejo
+- *method="logit"* más adelante veremos qué es un modelo logit, pero note que sólo para calcular una proporción hemos debido utilizar un modelo relativamente complejo. 
+- Note además que la función nos provee de intervalos de confianza. 
+
+### Gráfico de pastel
+
+Vamos a realizar un gráfico de pastel para observar 
+```{r, fig.align='center', fig.cap="Tipo de Contrato", fig.width=7, fig.height=5}
+tabla.contrato<-svytable(~casen$o16, design)
+tabla.contrato
+tipo.contrato<-prop.table(tabla.contrato)*100
+tipo.contrato
+pie(tipo.contrato, labels=c("Plazo indefinido - 74.51%", "Plazo fijo - 25.28%", "ns/nr - 0.2%"),
+    main="Tipo de contrato", family="Times", col=c("red", "blue", "green"))
+```
+
+- Note que hemos creado un objeto al cual llamamos *tabla.contrato*, dicha tabla nos mostrará el número de individuos que trabajan en cada condición contractual, para ello hemos utilizado el comando *svytable*, en el cual hemos utilizado el diseño muestral, como siempre. 
+- luego creamos otro objeto (*tipo.contrato*) el cual nos mostrará la frecuencia relativa o proporción de individuos en cada condición contractual
+- Después a través de la orden *pie* hemos creado una gráfica en la que su primer argumento alude al objeto de nombre *tipo.contrato* (que acababamos de crear)
+- Luego hemos creado diferentes etiquetas para el gráfico *labels=c("Plazo indefinido - 74.51%", "Plazo fijo - 25.28%", "ns/nr - 0.2%"*
+- Luego le asignamos un título mediante *main="Tipo de contrato"*
+- Luego le pedimos que el tipo de letra fuese *times new roman* mediante *family="Times"* 
+- Luego solicitamos que cada tajada del pastel tuviera los colores que especificamos a través de *col=c("red", "blue", "green")*
+
+#### Gráfica de pastel en tres dimensiones
+
+Si la gráfica anterior no nos dejó del todo a gusto, podemos utilizar otro paquete llamado *plotrix*, el que - entre muchas otras cosas - permite hacer gráficas de tres dimensiones. 
+
+Instalemos el paquete
+```{r, eval=FALSE}
+install.packages("plotrix")
+```
+Carguemos el paquete 
+```{r}
+library(plotrix)
+```
+Una vez cargado el paquete utilizaremos los siguientes comandos 
+```{r}
+lbls<-c("Plazo indefinido - 74.51%", "Plazo fijo - 25.28%", "ns/nr - 0.2%")
+pie3D(as.numeric(tipo.contrato), labels=lbls,
+      explode=0.1,main="Tipo de Contrato ")
+
+```
+
+## El mercado del trabajo de la región 
+
+Para prácticar lo que hemos aprendido realizaremos varios ejemplos. 
+
+### Condición de Actividad
+Veamos qué proporción de individuos se encontraban en cada condición de actividad durante el período de levantamiento de la encuesta
+
+```{r}
+cat.activ<-svytable(~casen$activ, design)
+cat.activ
+prop.activ<-prop.table(cat.activ)*100
+prop.activ
+lbls<-c("Ocupados", "Desocupados", "Inactivos")
+pie3D(as.numeric(prop.activ), labels=lbls,
+      explode=0.1,main="Categoría Ocupacional")
+```
+
+Si quisieramos una gráfica más sobria
+```{r}
+pie3D(as.numeric(prop.activ), labels=lbls,
+      explode=0.1,main="Categoría Ocupacional", col=gray(seq(0.4,1.0, length=3)))
+```
+
+
+####Condición de actividad por sexo
+
+A continuación analizaremos qué proporción de individuos se encuentra en cada condiciíon de actividad utilizando además la variable sexo. Para ello crearemos un objeto de manera muy similar al caso anterior 
+
+```{r}
+cat.activ.sex<-svytable(~casen$activ+sexo, design)
+cat.activ.sex
+prop.activ.sex<-prop.table(cat.activ.sex)*100
+prop.activ.sex
+```
+
+Note que sólo hemos añadido *+sexo* a la formula anterior. Lo que nos ha arrojado una tabla de contingencia un poco más compleja, para graficar ésta tendremos que dividirla. Para ello conviene saber con qué tipo de objeto estamos trabajando
+```{r}
+class(cat.activ.sex)
+```
+
+Note que el objeto es de tres tipos *"svytable" "xtabs"    "table"*. Nos interesa que sea de tipo *table* pues podemos trabajarlo como una matriz. Para determinar las características de esta matriz tipearemos 
+
+```{r}
+dim(prop.activ.sex)
+```
+
+Note que es un objeto de 3 filas y dos columnas, una columna de hombre y otra de mujeres, usaremos entonces cada objeto para hacer una gráfica diferente. 
+```{r}
+par(mfrow=c(1,2))
+lbls<-c("Ocupados", "Desocupados", "Inactivos")
+pie3D(as.numeric(prop.activ.sex[,1]), labels=lbls,
+      explode=0.1,main="Categoría Ocupacional - Hombres")
+pie3D(as.numeric(prop.activ.sex[,2]), labels=lbls,
+      explode=0.1,main="Categoría Ocupacional - Mujeres")
+```
+
+La gráfica anterior es de similares características a lo ya realizado. Fíjese, eso sí, que hemos hecho algunas cosas adicionales. utilizamos el comando *par(mfrow=c(1,2))* con esto indicamos que haríamos una matriz de gráficos de 1 fila y 2 columnas (e.g. si quisiera usar cuatro gráficos sería una matriz 2x2). En cada gráfico especificamos que columna utilizar de la tabla de proporciones anterior, la primera columna de hombres y la segunda de mujeres.
+
+##Categoría ocupacional
+
+Analicemos qué proporción de individuos se encuentra en cada categoría ocupacional en la región. 
+```{r}
+cat.ocup<-svytable(~casen$o15, design)
+cat.ocup
+prop.ocup<-prop.table(cat.ocup)*100
+prop.ocup
+```
+
+Quizá no sea tan buena idea construir un gráfica de pastel para esta variable, pues son demasiadas categorías. Construyamos en su lugar una gráfica de barras, para ello utilicemos el paquete *ggplot2*. 
+
+```{r, eval = FALSE}
+library(ggplot2)
+
+cat.ocup.grafico<-ggplot(subset(casen, !is.na(o15)), aes(factor(o15), weight=expr))+geom_bar()+ylab("Porcentaje")+xlab("Categoría Ocupacional")+coord_flip()+geom_text(aes(label =ifelse((..count..)==0,"",scales::percent((..count..)/sum(..count..)))), stat="count",colour="black")
+
+cat.ocup.grafico
+
+```
+
+Una de las ventajas de la construcción de gráficas con R es su flexibilidad. Al ser un lenguaje de programación se puede hacer cualquier cosa. Pero tiene, su costo, pues a veces algo sencillo puede ser relativamente complicado. Analicemos la gráfica que acabamos de realizar, paso a paso. 
+
+- Creamos un objeto de nombre *cat.ocup.grafico*, recuerde, el nombre puede ser cualquiera
+- Luego inicializamos el gráfico a través de la orden *ggplot* en ella se suele especificar la base de datos que se utilizará y otros aspectos de estructura. Note que para nuestro caso utilizamos como base de referencia la siguiente: *subset(casen, !is.na(o15))*; es decir: un subconjunto de nuestra base CASEN donde eliminamos todos los valores perdidos de la variable *o15*. Luego, dentro de la misma orden hemos utilizado *aes* cuya función es definir de qué manera se reconocerá la o las variables en cuestión. En este caso tratamos la variable *o15* como *factor* que es la manera en que llamamos a una variable categórica. Así también, note que hemos incluido nuestro **factor de expansión** a través de la orden *weight*. 
+- El siguiente paso es declarar qué tipo de gráfico realizar, en este caso para utilizar una gráfica de barras debemos declarar que será un objeto del tipo *geom_bar*. Dentro del argumento de éste hemos utilizado *aes(y = (..count..)/sum(..count..))*, esto lo hemos hecho únicamente para que la gráfica sea expresada en términos de porcentaje en lugar de frecuencia absoluta, como lo haría por defecto. 
+- Luego *xlab* y *ylab* son utilizados unicamente para dar nombre a los ejes 'x' e 'y'. 
+- Por último, *coord_flip* lo hemos utilizado para que la gráfica se muestre horizontalmente en lugar de verticalmente como hubiese sido por defecto.
+
+
+Como habrá notado, en la gráfica anterior el nombre de las etiquetas tiene un error de formato. Esto ocurre, pues al momento de la importación de la base no se han traspasado bien las tildes (esto es porque casi todos los software están pensados para usarlos en inglés). Pero es un problema fácil de solucionar, solo reescribiremos las etiquetas de la variable *casen$o15*. 
+```{r}
+levels(casen$o15)<-c("Patrón o empleador", "Trabajador por cuenta propia","Empleado u obrero del sector público", "Empleado u obrero de empresas públicas", "Empleado u obrero del sector privado", "Servicio Doméstico puertas adentro", "Servicio Doméstico puertas afuera", "FF.AA. y del Orden", "Familiar no remunerado")
+```
+
+Una vez hecho esto, podemos realizar la gráfica una vez más. 
+```{r}
+if (!require(ggplot2)) install.packages("ggplot2"); require(ggplot2)
+
+cat.ocup.grafico = ggplot(subset(casen, !is.na(o15)), aes(factor(o15), weight=expr))+ylab("Número de trabajadores")+xlab("Categoría Ocupacional")+geom_bar(fill="blue")+coord_flip()+geom_text(aes(label =ifelse((..count..)==0,"",scales::percent((..count..)/sum(..count..)))), stat="count",colour="black", vjust=0.5, hjust=-.05)+scale_y_continuous(labels=scales::comma, limits=c(0,520000))
+
+cat.ocup.grafico
+
+
+```
+
+

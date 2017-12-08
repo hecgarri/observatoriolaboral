@@ -10,19 +10,21 @@ afiliados <- read_delim("~/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de �
 names(afiliados) = c("id", "sex", "date of birth", "birth county", 
                      "education", "esc", "ecivil", "county", "institution")
 
+afiliados = filter(afiliados, grepl('^084', county))
+
 rentas_imponibles <- read_delim("~/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Bases de datos/Base de Datos Seguro de Cesantía/muestraasc5%/5_rentas_imponibles.csv", 
                                 ";", escape_double = FALSE, col_names = FALSE, 
                                 trim_ws = TRUE)
-names(rentas_imponibles) = c("id_per", "id_emp", "fecha_deven", "tipo", 
+names(rentas_imponibles) = c("id", "id_emp", "fecha_deven", "tipo", 
                              "subsidio", "econ_activ", "comuna_emp", 
                              "ingreso", "id ingreso", "id tope")
 
 
-rentas_imponibles = filter(rentas_imponibles, fecha_deven == "201603" | fecha_deven = "201602")
+rentas_imponibles = filter(rentas_imponibles, fecha_deven == "201603" |
+                             fecha_deven == "201602" | fecha_deven == "201601")
 
-data = merge(afiliados, rentas_imponibles, by.x = "id", by.y = "id_per")
-
-data = filter(data, grepl('^084', county))
+data = inner_join(afiliados, rentas_imponibles) 
+  
 
 data = mutate(data, county = recode_factor(county, '08401' = "Chillán", 
                                                    '08402' = "Bulnes",
@@ -47,6 +49,44 @@ data = mutate(data, county = recode_factor(county, '08401' = "Chillán",
                                                    '08421' = "Yungay"))
 
 
+data = mutate(data, 
+      actividad = recode_factor(econ_activ,
+                              '00' = "Actividad no especificada",
+                              '01' = "Agricultura, Ganadería, Caza y Silvicultura",
+                              '02' = 'Pesca',
+                              '03' = 'Explotación de Minas y Canteras',
+                              '04' = 'Industrias Manufactureras No Metálicas',
+                              '05' = 'Industrias Manufactureras Metálicas',
+                              '06' = 'Suministro de Electricidad, Gas y Agua',
+                              '07' = 'Construcción',
+                              '08' = 'Comercio al Por Mayor y Menor; Rep. Vehículos Automotores/Enseres Domésticos',
+                              '09' = 'Hoteles y Restaurantes',
+                              '10' = 'Transporte, Almacenamiento y Comunicaciones',
+                              '11' = 'Intermediación Financiera',
+                              '12' = 'Actividades Inmobiliarias, Empresariales y de Alquiler',
+                              '13' = 'Adm. Pública y Defensa; Planes de Seg. Social, Afiliación Obligatoria',
+                              '14' = 'Enseñanza',
+                              '15' = 'Servicios Sociales y de Salud',
+                              '16' = 'Otras Actividades de Servicios Comunitarias, Sociales y Personales',
+                              '17' = 'Consejo de Administración de Edificios y Condominios',
+                              '18' = 'Organizaciones y Órganos Extraterritoriales'))
+
+
+data = mutate(data, sector = recode_factor(actividad, 
+                                 'Pesca'="Pesca", 
+                                 'Industrias Manufactureras No Metálicas'="Industria Manufacturera",
+                                 'Industrias Manufactureras Metálicas'="Industria Manufacturera",
+                                 'Suministro de Electricidad, Gas y Agua'="Electricidad, Gas y Agua",
+                                 'Comercio al Por Mayor y Menor; Rep. Vehículos Automotores/Enseres Domésticos'="Comercio",
+                                 'Transporte, Almacenamiento y Comunicaciones'="Transporte y Comunicaciones",
+                                 'Enseñanza'="Servicios Sociales y Personales",
+                                 'Servicios Sociales y de Salud'="Servicios Sociales y Personales",
+                                 'Otras Actividades de Servicios Comunitarias, Sociales y Personales'="Servicios Sociales y Personales",
+                                 'Consejo de Administración de Edificios y Condominios'="Administracion Publica",
+                                 'Organizaciones y Órganos Extraterritoriales'="Administracion Publica", 
+                                 'Adm. Pública y Defensa; Planes de Seg. Social, Afiliación Obligatoria' = "Administracion Publica"))
+
+
 data = mutate(data, provincia = ifelse(county == "Cobquecura" | county == "Coelemu"| 
                                        county == "Ninhue" | county == "Portezuelo" |
                                        county == "Quirihue" | county == "Quirihue" |
@@ -58,18 +98,33 @@ data = mutate(data, provincia = ifelse(county == "Cobquecura" | county == "Coele
                                        county == "Yungay","Diguillín", "Punilla")))
 data = mutate(data, ingreso = as.numeric(ingreso))
 
-data2 = aggregate(data['ingreso'], by = data['id'], sum)
-
-data = merge(data, data2)
+data = mutate(data, residente = ifelse(grepl('^084', comuna_emp),1,0))
 
 diseno = svydesign(~id, probs = NULL, weights = NULL, data = data)
 
-ingreso_medio = svyby(~ingreso, by = ~provincia+econ_activ,design = diseno,  svymean) %>% 
+ingreso_medio = svyby(~ingreso, by = ~provincia+sector,design = diseno,  svymean) %>% 
   mutate(cv = (se/ingreso)*100)
 
-frecuencia = data %>% group_by(provincia, econ_activ) %>%
+frecuencia = data %>% group_by(provincia, sector) %>%
+  count() 
+ingreso_medio = merge(ingreso_medio, frecuencia, by.x = c("provincia", "sector"), by.y = c("provincia", "sector"))
+
+ingreso_medio = mutate(ingreso_medio, 
+                       confiable = ifelse(cv>=30 | n<=50,
+                      "No confiable", "confiable"))
+
+write.csv(ingreso_medio, "./seguro_cesantia/ingreso_promedio.csv")
+
+ingreso_ = svyby(~ingreso, by = ~sector,design = diseno,  svymean) %>% 
+  mutate(cv = (se/ingreso)*100)
+
+frecuencia = data %>% group_by(sector) %>%
   count() 
 
-ingreso_medio = mutate(ingreso_medio, freq = frecuencia$n, 
-                       confiable = ifelse(cv<=25 | freq<=50, "No confiable", "confiable"))
+ingreso_ = merge(ingreso_, frecuencia, by.x = "sector", by.y = "sector")
+ingreso_ = mutate(ingreso_,
+          confiable = ifelse(cv>=30 | n<=50,
+          "No confiable", "confiable"))
 
+
+write.csv(ingreso_, "./seguro_cesantia/ingreso_sector.csv")

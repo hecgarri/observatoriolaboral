@@ -1,0 +1,411 @@
+---
+title: "Basic Managing data"
+subtitle: "Observatorio Laboral Ñuble"
+author: "Héctor Garrido"
+date: "28 de noviembre de 2017"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+## Leadership data frame 
+
+```{r}
+manager <- c(1, 2, 3, 4, 5)
+date <- c("10/24/08", "10/28/08", "10/1/08", "10/12/08", "5/1/09")
+country <- c("US", "US", "UK", "UK", "UK")
+gender <- c("M", "F", "F", "M", "F")
+age <- c(32, 45, 25, 39, 99)
+q1 <- c(5, 3, 3, 3, 2)
+q2 <- c(4, 5, 5, 3, 2)
+q3 <- c(5, 2, 5, 4, 1)
+q4 <- c(5, 5, 5, NA, 2)
+q5 <- c(5, 5, 2, NA, 1)
+
+leadership <- data.frame(manager, date, country, gender, age,
+q1, q2, q3, q4, q5, stringsAsFactors=FALSE)
+
+```
+
+Los datos son los siguientes: 
+
+```{r}
+leadership 
+```
+
+
+- The five ratings (q1 to q5) will need to be combined, yielding a single mean deferential score from each manager.
+- In surveys, respondents often skip questions. For example, the boss rating manager 4 skipped questions 4 and 5. We’ll need a method of handling incomplete data. We’ll also need to recode values like 99 for age to missing.
+- There may be hundreds of variables in a dataset, but we may only be interested in a few. To simplify matters, we’ll want to create a new dataset with only the variables of interest.
+- Past research suggests that leadership behavior may change as a function of the manager’s age. To examine this, we may want to recode the current values of age into a new categorical age grouping (for example, young, middle-aged, elder).
+- Leadership behavior may change over time. We might want to focus on deferential behavior during the recent global financial crisis. To do so, we may want to limit the study to data gathered during a specific period of time (say, January 1,
+2009 to December 31, 2009).
+
+
+### Some operators
+
+```{r, echo = FALSE, results = 'asis', message = "FALSE"}
+Operador = c("+", "-", "*", "/", "^ o **", "x%%y", "x%/%y")
+Descripción = c("Suma", "Resta", "Multiplicación", "División",
+                "Exponenciación", "Modulo", "División entera")
+
+if (!require(knitr)) install.packages("knitr"); require(knitr)
+
+kable(cbind(Operador, Descripción), caption = "Diferentes operaciones")
+```
+
+## Creating new variables 
+
+Let’s say that you have a data frame named mydata , with variables x1 and x2 , and you want to create a new variable sumx that adds these two variables and a new variable called meanx that averages the two variables. If you use the code
+
+```{r, eval = FALSE}
+sumx = x1+x2
+
+meanx = (x1+x2)/2
+
+```
+
+the statements will succeed but you’ll end up with a data frame ( mydata) and two separate vectors ( sumx and meanx ). This is probably not what you want. Ultimately, you want to incorporate new variables into the original data frame. The following listing provides three separate ways to accomplish this goal. The one you choose is up to you;
+the results will be the same.
+
+```{r}
+
+# forma 1
+mydata<-data.frame(x1 = c(2, 2, 6, 4),
+x2 = c(3, 4, 2, 8))
+mydata$sumx <- mydata$x1 + mydata$x2
+mydata$meanx <- (mydata$x1 + mydata$x2)/2
+
+# forma 2
+mydata <- transform(mydata,
+sumx = x1 + x2,
+meanx = (x1 + x2)/2)
+
+# forma 3
+if (!require(dplyr)) install.packages("dplyr"); require(dplyr)
+
+mydata = mutate(mydata, 
+sumx = x1+x2,
+meanx = (x1+x2)/2)
+  
+```
+
+## Recoding variables
+
+Recoding involves creating new values of a variable conditional on the existing values of the same and/or other variables. For example, you may want to
+
+- Change a continuous variable into a set of categories
+- Replace miscoded values with correct values
+- Create a pass/fail variable based on a set of cutoff scores
+
+### Some operators 
+
+```{r, results='asis'}
+
+operador = c("<", "<=", ">", ">=", "==", "!=", "!x",
+             "x| y", "x & y", "isTRUE(x)")
+descripción = c("Menor que", "Menor o igual que", 
+                "Mayor que", "Mayor o igual que", 
+                "Exactamene igual a", "Distinto de",
+                "Negacinó de x", "x o y",
+                "x y y (intersección)", "Prueba sobre x")
+kable(cbind(operador,descripción))
+
+```
+
+
+First, you must recode the value 99 for age to missing with code such as
+
+
+```{r}
+leadership$age[leadership$age== 99] <- NA
+```
+
+Once missing values for age have been specified, you can then use the following
+code to create the agecat variable:
+
+```{r}
+
+# Forma 1
+
+leadership$agecat[leadership$age > 75] <- "Elder"
+leadership$agecat[leadership$age >= 55 & leadership$age <= 75] <- "Middle Aged"
+leadership$agecat[leadership$age < 55] <- "Young"
+
+# Forma 2 (dplyr)
+
+leadership = mutate(leadership, agecat = ifelse(age>75,"Elder",
+                                         ifelse(age>=55 & age<=75, "Middle Aged",
+                                         ifelse(age<55, "Young", NA))))
+
+```
+
+
+## Renaming variables
+
+If you’re not happy with your variable names, you can change them interactively or pro-
+grammatically. Let’s say that you want to change the variables manager to managerID
+and date to testDate .
+
+```{r, eval = FALSE}
+fix(leadership)
+```
+
+```{r, eval = TRUE}
+
+# Forma 1 paquete reshape
+
+if (!require(reshape)) install.packages("reshape"); require(reshape)
+
+leadership <- reshape::rename(leadership, c(manager="managerID", date="testDate"))
+                     
+# Forma 2 (dplyr)                     
+
+#leadership = dplyr::rename(leadership, managerID = manager, testDate = date)
+
+
+# Forma 3
+
+names(leadership)[2] <- "testDate"
+```
+
+
+```{r}
+leadership
+```
+
+## Missing values
+
+R provides a number of functions for identifying observations that contain missing
+values. The function is.na() allows you to test for the presence of missing values.
+Assume that you have a vector:
+
+```{r}
+y = c(1,2,3,4,NA)
+
+is.na(y)
+```
+
+```{r}
+is.na(leadership[,6:10])
+```
+
+### Excluding missing values from analyses
+
+```{r}
+x <- c(1, 2, NA, 3)
+y <- x[1] + x[2] + x[3] + x[4]
+z <- sum(x)
+y <- sum(x,na.rm = TRUE)
+```
+
+You can remove any observation with missing data by using the na.omit() function .
+na.omit() deletes any rows with missing data
+
+```{r}
+
+newdata = na.omit(leadership)
+
+newdata 
+
+```
+
+
+## Date values
+
+Dates are typically entered into R as character strings and then translated into date vari-
+ables that are stored numerically
+
+```{r, echo = FALSE, results = "asis" }
+
+símbolo = c("%d", "%a", "%A", "%m", "%b", "%B","%Y", "%y")
+significado = c("día como numero", "día de la semana abreviado", 
+                "día de la semana completo", "mes número",
+                "mes abreviado", "mes completo", "año dos dígitos",
+                "año 4 dígitos")
+
+if (!require(knitr)) install.packages("knitr"); require(knitr)
+
+
+kable(cbind(símbolo, significado))
+
+```
+
+```{r}
+
+strDates <- c("01/05/1965", "08/16/1975")
+
+dates <- as.Date(strDates, "%m/%d/%Y")
+
+myformat <- "%m/%d/%y"
+
+leadership$testDate <- as.Date(leadership$testDate, myformat)
+
+```
+
+Two functions are especially useful for time-stamping data . Sys.Date() returns
+today’s date and date() returns the current date and time
+
+```{r}
+Sys.Date()
+
+date()
+```
+
+To learn more about converting character data to dates, take a look at help(as.
+Date) and help(strftime) . To learn more about formatting dates and times, see
+help(ISOdatetime)
+
+```{r, eval = FALSE}
+help("ISOdatetime")
+
+#ISOdate(year, month, day, hour = 12, min = 0, sec = 0, tz = "GMT")
+
+ISOdate(2005,10,21,18,47,22,tz="PDT")
+
+```
+
+## Type conversions
+
+
+Type conversions in R work in a similar fashion to those in other statistical
+programming languages. For example, adding a character string to a numeric vector
+converts all the elements in the vector to character values
+
+```{r, echo = FALSE, results='asis'}
+test = c("is.numeric()", "is.character()", "is.vector()", 
+         "is.matrix()", "is.data.frame()", "is.factor()", 
+         "is.logical()")
+convert = c("as.numeric()", "as.character()", "as.vector()", 
+            "as.matrix()", "as.data.frame()", "as.factor()", 
+            "as.logical()")
+
+kable(cbind(test,convert))
+```
+
+```{r}
+ a <- c(1,2,3)
+ a
+
+ is.numeric(a)
+
+ is.vector(a)
+
+ a <- as.character(a)
+ a
+
+ is.numeric(a)
+
+ is.vector(a)
+
+ is.character(a)
+ 
+
+```
+
+## Sorting data
+
+Sometimes, viewing a dataset in a sorted order can tell you quite a bit about the data.
+For example, which managers are most deferential? To sort a data frame in R, use
+the order() function
+
+```{r}
+leadership 
+
+
+newdata <- leadership[order(leadership$age),]
+
+newdata
+```
+
+## Subsetting datasets
+
+R has powerful indexing features for accessing the elements of an object. These features
+can be used to select and exclude variables, observations, or both. The following sec-
+tions demonstrate several methods for keeping or deleting variables and observations.
+
+### Selecting (keeping) variables
+
+It’s a common practice to create a new dataset from a limited number of variables cho-
+sen from a larger dataset. In chapter 2, you saw that the elements of a data frame are
+accessed using the notation dataframe[row indices, column indices] . You can
+use this to select variables
+
+```{r}
+# Forma 1 
+newdata <- leadership[, c(6:10)]
+
+# forma 2 (dplyr)
+
+newdata = select(leadership, 'testDate', 'age')
+
+```
+
+### Excluding (dropping) variables
+
+There are many reasons to exclude variables. For example, if a variable has several
+missing values, you may want to drop it prior to further analyses. Let’s look at some methods of excluding variables.
+
+```{r}
+
+myvars <- names(leadership) %in% c("q3", "q4")
+newdata <- leadership[!myvars]
+
+newdata 
+
+newdata <- leadership[c(-8,-9)]
+
+```
+
+### Selecting observations
+
+```{r}
+newdata <- leadership[1:3,]
+
+newdata <- leadership[which(leadership$gender=="M" &
+leadership$age > 30),]
+
+## Forma 2 (dplyr)
+
+newdata = filter(leadership, gender=="M" & age>30)
+
+```
+
+### Random sampling
+
+Sampling from larger datasets is a common practice in data mining and machine learn-
+ing. For example, you may want to select two random samples, creating a predictive
+model from one and validating its effectiveness on the other.
+
+```{r}
+set.seed(1234)
+
+dplyr::sample_n(leadership, 2, replace = TRUE)
+
+```
+
+
+
+## Using SQL statements to manipulate data frames
+
+
+```{r}
+if (!require(sqldf)) install.packages("sqldf"); require(sqldf)
+
+newdf <- sqldf("select * from mtcars where carb=1 order by mpg",
+row.names=TRUE)
+```
+
+## Mathematical functions 
+
+```{r, echo = FALSE, results = 'asis', warning= FALSE}
+Function = c("abs(x)", "sqrt(x)", "ceiling(x)", "floor(x)",
+             "trunc(x)", "round(x, digits = n)", 
+             "signif(x,digits = n)", "cos(x), sin(x), tan(x)", 
+             "log(x, base=n)", "log(x)", "log10(x)")
+
+kable(Function)
+```
+
