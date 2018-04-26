@@ -39,3 +39,5 @@ modelo = svyglm(log(ingreso_hora)~ocup+sexo2+esc+I(sexo2*ocup)+I(esc*ocup)+
 
 
 
+
+

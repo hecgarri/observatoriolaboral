@@ -20,6 +20,7 @@ t <- proc.time() # Inicia el cronometro
 
 nene = list.files(pattern=".csv$")
 
+nene = nene[c(85,88,91,94)]
 # ENEs
 # 2010:01-11: Central: 01,04,07,10 
 # 2011:12-23: Central: 13,16,19,22
@@ -32,11 +33,11 @@ nene = list.files(pattern=".csv$")
 
 # Se importan todas las bases establecidas en la secuencia de una sola vez
 todas =  mclapply(nene,mc.cores=4,function(x) fread(x, sep=",", header=TRUE,
-                select=c("id_directorio", "estrato", 
-                         "fact", "cae_general", "mes_central", "b8", "b9", 
-                         "ano_trimestre", "b18_codigo", "region", 
-                         "categoria_ocupacion", "r_p_c","edad",
-                         "c1", "c10", "c11", "habituales", "b7_3", "b7_4", "sexo")))
+                                                    select=c("id_directorio", "estrato", 
+                                                             "fact", "cae_general", "mes_central", "b8", "b9", 
+                                                             "ano_trimestre", "b18_codigo", "region", 
+                                                             "categoria_ocupacion", "r_p_c","edad",
+                                                             "c1", "c10", "c11", "habituales", "b7_3", "b7_4", "sexo")))
 
 #-------------------------------------------------------------------------------
 # CREACION DE LA VARIABLES region_e y prov_e
@@ -120,8 +121,8 @@ options(survey.lonely.psu = "certainty")
 
 # info muestral de la NENE
 info = mclapply(1:length(todas),mc.cores=4, function(i)
-        svydesign(id = ~id_directorio, strata = ~estrato, weights  = 
-                          ~fact,nest = TRUE, data = todas[[i]]))
+  svydesign(id = ~id_directorio, strata = ~estrato, weights  = 
+              ~fact,nest = TRUE, data = todas[[i]]))
 
 
 #-------------------------------------------------------------------------------
@@ -137,18 +138,18 @@ info = mclapply(1:length(todas),mc.cores=4, function(i)
 n = length(info)
 
 desocupados.nuble. =mclapply(1:n,mc.cores=4, function(i) svytotal(~I(cae_general=="Desocupado" | 
-                                          cae_general=="Busca Trabajo Primera Vez"), 
-                                     subset(info[[i]],prov==84), multicore= TRUE, 
-                                     drop.empty.groups = FALSE, na.rm=TRUE))
+                                                                       cae_general=="Busca Trabajo Primera Vez"), 
+                                                                  subset(info[[i]],prov==84), multicore= TRUE, 
+                                                                  drop.empty.groups = FALSE, na.rm=TRUE))
 
 tasa.desempleo.nuble. = mclapply(1:n,mc.cores=4, function(i)
-                                svyratio(~I(cae_general=="Desocupado" | 
-                                cae_general=="Busca Trabajo Primera Vez"),
-                                denominator=~I(cae_general=="Ocupado" |
-                                cae_general=="Desocupado" |
-                                cae_general=="Busca Trabajo Primera Vez"),
-                                subset(info[[i]],prov==84), multicore= TRUE, 
-                                drop.empty.groups = FALSE, na.rm.all=TRUE))
+  svyratio(~I(cae_general=="Desocupado" | 
+                cae_general=="Busca Trabajo Primera Vez"),
+           denominator=~I(cae_general=="Ocupado" |
+                            cae_general=="Desocupado" |
+                            cae_general=="Busca Trabajo Primera Vez"),
+           subset(info[[i]],prov==84), multicore= TRUE, 
+           drop.empty.groups = FALSE, na.rm.all=TRUE))
 
 desocupados.nuble = unlist(lapply(desocupados.nuble., '[[', 2) ) 
 tasa.desempleo.nuble = unlist(lapply(tasa.desempleo.nuble., '[[', 1) ) 
@@ -161,14 +162,14 @@ ee.tasa.desempleo.nuble = unlist(lapply(tasa.desempleo.nuble., SE))
 #-------------------------------------------------------------------------------
 #
 ocupados.nuble. = mclapply(1:n,mc.cores=4, function(i) svytotal(~I(cae_general=="Ocupado"), 
-                                  subset(info[[i]],prov==84), 
-                                  multicore= TRUE, 
-                                  drop.empty.groups = FALSE, na.rm=TRUE))
+                                                                subset(info[[i]],prov==84), 
+                                                                multicore= TRUE, 
+                                                                drop.empty.groups = FALSE, na.rm=TRUE))
 tasa.ocupados.nuble. =mclapply(1:n,mc.cores=4, function(i) svyratio(~I(cae_general=="Ocupado"),
-                                       denominator=~I(edad>=15),
-                                       subset(info[[i]],prov==84), 
-                                       multicore= TRUE, 
-                                       drop.empty.groups = FALSE, na.rm=TRUE))
+                                                                    denominator=~I(edad>=15),
+                                                                    subset(info[[i]],prov==84), 
+                                                                    multicore= TRUE, 
+                                                                    drop.empty.groups = FALSE, na.rm=TRUE))
 
 
 ocupados.nuble = unlist(lapply(ocupados.nuble., '[[', 2) ) 
@@ -182,26 +183,26 @@ ee.tasa.ocupados.nuble = unlist(lapply(tasa.ocupados.nuble., SE))
 #-------------------------------------------------------------------------------
 #
 fuerza.trabajo.nuble. =mclapply(1:n,mc.cores=4, function(i) svytotal(~I(cae_general=="Ocupado" | 
-                                           cae_general=="Desocupado" | 
-                                           cae_general=="Busca Trabajo Primera Vez"), 
-                                          subset(info[[i]],prov==84), multicore= TRUE, 
-                                          drop.empty.groups = FALSE, na.rm=TRUE))
+                                                                          cae_general=="Desocupado" | 
+                                                                          cae_general=="Busca Trabajo Primera Vez"), 
+                                                                     subset(info[[i]],prov==84), multicore= TRUE, 
+                                                                     drop.empty.groups = FALSE, na.rm=TRUE))
 
 tasa.participacion.nuble. = mclapply(1:n,mc.cores=4, function(i) svyratio(~I(cae_general=="Ocupado" | 
-                                  cae_general=="Desocupado" | 
-                                  cae_general=="Busca Trabajo Primera Vez"), 
-                                  denominator=~I(edad>=15), subset(info[[i]],prov==84), 
-                                  multicore= TRUE, drop.empty.groups = FALSE, na.rm=TRUE))
+                                                                               cae_general=="Desocupado" | 
+                                                                               cae_general=="Busca Trabajo Primera Vez"), 
+                                                                          denominator=~I(edad>=15), subset(info[[i]],prov==84), 
+                                                                          multicore= TRUE, drop.empty.groups = FALSE, na.rm=TRUE))
 
 
 tasa.participacion.nuble = ts(unlist(lapply(tasa.participacion.nuble., '[[', 1) )) 
 
 
 tasa.participacion. = mclapply(1:n,mc.cores=4, function(i) svyratio(~I(cae_general=="Ocupado" | 
-                                     cae_general=="Desocupado" | 
-                                     cae_general=="Busca Trabajo Primera Vez"), 
-                                denominator=~I(edad>=15), info[[i]], 
-                                multicore= TRUE, drop.empty.groups = FALSE, na.rm=TRUE))
+                                                                         cae_general=="Desocupado" | 
+                                                                         cae_general=="Busca Trabajo Primera Vez"), 
+                                                                    denominator=~I(edad>=15), info[[i]], 
+                                                                    multicore= TRUE, drop.empty.groups = FALSE, na.rm=TRUE))
 
 
 tasa.participacion = ts(unlist(lapply(tasa.participacion., '[[', 1) )) 
@@ -209,23 +210,23 @@ tasa.participacion = ts(unlist(lapply(tasa.participacion., '[[', 1) ))
 
 
 tasa.participacion.nuble.sexo. = mclapply(1:n,mc.cores=4, function(i) svyby(~I(cae_general=="Ocupado" | 
-                                   cae_general=="Desocupado" | 
-                                   cae_general=="Busca Trabajo Primera Vez"), 
-                              denominator=~I(edad>=15), subset(info[[i]],prov==84),svyratio,
-                              by =~sexo ,
-                              multicore= TRUE, drop.empty.groups = FALSE, na.rm=TRUE))
+                                                                                 cae_general=="Desocupado" | 
+                                                                                 cae_general=="Busca Trabajo Primera Vez"), 
+                                                                            denominator=~I(edad>=15), subset(info[[i]],prov==84),svyratio,
+                                                                            by =~sexo ,
+                                                                            multicore= TRUE, drop.empty.groups = FALSE, na.rm=TRUE))
 
 tasa.participacion.nuble.sexo = do.call(rbind, tasa.participacion.nuble.sexo.)
 
-write.csv(tasa.participacion.nuble.sexo,"/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cuantitativo/GitHub/observatoriolaboral/Boletines/participación Ñuble por sexo.csv")
+write.csv(tasa.participacion.nuble.sexo,"/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cuantitativo/GitHub/observatoriolaboral/Prensa/participación Ñuble por sexo.csv")
 
 
 tasa.participacion.sexo. = mclapply(1:n,mc.cores=4, function(i) svyby(~I(cae_general=="Ocupado" | 
-                                     cae_general=="Desocupado" | 
-                                     cae_general=="Busca Trabajo Primera Vez"), 
-                                denominator=~I(edad>=15), info[[i]],svyratio,
-                                by =~sexo ,
-                                multicore= TRUE, drop.empty.groups = FALSE, na.rm=TRUE))
+                                                                           cae_general=="Desocupado" | 
+                                                                           cae_general=="Busca Trabajo Primera Vez"), 
+                                                                      denominator=~I(edad>=15), info[[i]],svyratio,
+                                                                      by =~sexo ,
+                                                                      multicore= TRUE, drop.empty.groups = FALSE, na.rm=TRUE))
 
 tasa.participacion.sexo = do.call(rbind, tasa.participacion.sexo.)
 
@@ -233,16 +234,16 @@ write.csv(tasa.participacion.sexo,"/home/hector/GoogleDriveUBB/OLR Ñuble - Obse
 
 
 tasa.participacion.biobio.sexo. = mclapply(1:n,mc.cores=4, function(i) svyby(~I(cae_general=="Ocupado" | 
-                             cae_general=="Desocupado" | 
-                             cae_general=="Busca Trabajo Primera Vez"), 
-                        denominator=~I(edad>=15), subset(info[[i]], prov==81, prov==82, prov==83),
-                        svyratio,
-                        by =~sexo ,
-                        multicore= TRUE, drop.empty.groups = FALSE, na.rm=TRUE))
+                                                                                  cae_general=="Desocupado" | 
+                                                                                  cae_general=="Busca Trabajo Primera Vez"), 
+                                                                             denominator=~I(edad>=15), subset(info[[i]], prov==81, prov==82, prov==83),
+                                                                             svyratio,
+                                                                             by =~sexo ,
+                                                                             multicore= TRUE, drop.empty.groups = FALSE, na.rm=TRUE))
 
 tasa.participacion.biobio.sexo = do.call(rbind, tasa.participacion.biobio.sexo.)
 
-write.csv(tasa.participacion.biobio.sexo,"/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cuantitativo/GitHub/observatoriolaboral/Boletines/participación biobio por sexo.csv")
+write.csv(tasa.participacion.biobio.sexo,"/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cuantitativo/GitHub/observatoriolaboral/Prensa/participación biobio por sexo.csv")
 
 
 
@@ -263,14 +264,33 @@ for (i in 1:length(info)){
 #
 
 tasa.promedio.subempleo.nacional. =mclapply(1:n,mc.cores=4, function(i) svyratio(~I(subempleo==1), 
-                                   denominator=~I(cae_general=="Ocupado"),
-                                   info[[i]],multicore = TRUE, 
-                                   drop.empty.groups = FALSE, na.rm=TRUE))
+                                                                                 denominator=~I(cae_general=="Ocupado"),
+                                                                                 info[[i]],multicore = TRUE, 
+                                                                                 drop.empty.groups = FALSE, na.rm=TRUE))
 
 tasa.promedio.subempleo.nuble. = mclapply(1:n,mc.cores=4, function(i) svyratio(~I(subempleo==1), 
-                                    denominator=~I(cae_general=="Ocupado"),
-                                    subset(info[[i]],prov==84),multicore = TRUE, 
-                                    drop.empty.groups = FALSE, na.rm=TRUE))
+                                                                               denominator=~I(cae_general=="Ocupado"),
+                                                                               subset(info[[i]],prov==84),multicore = TRUE, 
+                                                                               drop.empty.groups = FALSE, na.rm=TRUE))
+
+tasa.subempleo.nuble.sexo. = mclapply(1:n,mc.cores=4, function(i) svyby(~~I(subempleo==1), 
+                                                                        denominator=~I(cae_general=="Ocupado"),
+                                                                        subset(info[[i]],prov==84),svyratio,
+                                                                            by =~sexo,
+                                                                            multicore= TRUE, drop.empty.groups = FALSE, na.rm=TRUE))
+
+tasa.subempleo.nuble.sexo.. = rbindlist(tasa.subempleo.nuble.sexo.)
+
+write.csv(tasa.subempleo.nuble.sexo..,"/home/hector/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Análisis Cuantitativo/GitHub/observatoriolaboral/Prensa/subempleo Ñuble por sexo.csv")
+
+
+tasa.subempleo.nacional.sexo. = mclapply(1:n,mc.cores=4, function(i) svyby(~~I(subempleo==1), 
+                                                                        denominator=~I(cae_general=="Ocupado"),
+                                                                        info[[i]],svyratio,
+                                                                        by =~sexo,
+                                                                        multicore= TRUE, drop.empty.groups = FALSE, na.rm=TRUE))
+
+tasa.subempleo.nacional.sexo.. = rbindlist(tasa.subempleo.nacional.sexo.)
 
 
 tasa.promedio.subempleo.nacional = unlist(lapply(tasa.promedio.subempleo.nacional., '[[', 1) ) 
@@ -279,6 +299,10 @@ tasa.promedio.subempleo.nuble = unlist(lapply(tasa.promedio.subempleo.nuble., '[
 ee.tasa.promedio.subempleo.nacional = unlist(lapply(tasa.promedio.subempleo.nacional., SE))
 ee.tasa.promedio.subempleo.nuble = unlist(lapply(tasa.promedio.subempleo.nuble., SE))
 
+
+
+
+cbind(tasa.promedio.subempleo.nacional,tasa.promedio.subempleo.nuble)
 
 #-------------------------------------------------------------------------------
 # Trabajadores a cuenta propia en Nuble y Nacional
@@ -294,11 +318,11 @@ for (i in 1:length(info)){
 
 for (i in 1:length(info)){
   info[[i]]$variables = mutate(info[[i]]$variables, cat.ocup = ifelse(cat.ocup==3 & b8==2,3,
-                                            ifelse(cat.ocup==3 & b8==1 & b9==1,4, 
-                                            ifelse(cat.ocup==3 & b8==1 & b9==2,5, 
-                                            ifelse(cat.ocup==1,1, 
-                                            ifelse(cat.ocup==2,2, 
-                                            ifelse(cat.ocup==4,6,NA)))))))
+                                                                      ifelse(cat.ocup==3 & b8==1 & b9==1,4, 
+                                                                             ifelse(cat.ocup==3 & b8==1 & b9==2,5, 
+                                                                                    ifelse(cat.ocup==1,1, 
+                                                                                           ifelse(cat.ocup==2,2, 
+                                                                                                  ifelse(cat.ocup==4,6,NA)))))))
 }
 
 for (i in 1:length(info)){
@@ -312,13 +336,13 @@ for (i in 1:length(info)){
 
 
 ocup_cuenta_propia_nuble. = mclapply(1:length(info),mc.cores = 4, function(i) svytotal(~I(cat.ocup=="cuenta propia"), 
-                                        subset(info[[i]],prov==84), multicore= TRUE, 
-                                        drop.empty.groups = FALSE, na.rm=TRUE))
+                                                                                       subset(info[[i]],prov==84), multicore= TRUE, 
+                                                                                       drop.empty.groups = FALSE, na.rm=TRUE))
 
 
 ocup_cuenta_propia_nacional. =mclapply(1:length(info),mc.cores = 4, function(i) svytotal(~I(cat.ocup=="cuenta propia"), 
-                                            info[[i]], multicore= TRUE, 
-                                            drop.empty.groups = FALSE, na.rm=TRUE))
+                                                                                         info[[i]], multicore= TRUE, 
+                                                                                         drop.empty.groups = FALSE, na.rm=TRUE))
 
 ocup_cuenta_propia_nuble = unlist(lapply(ocup_cuenta_propia_nuble., '[[', 2) ) 
 ocup_cuenta_propia_nacional = unlist(lapply(ocup_cuenta_propia_nacional., '[[', 2) ) 
@@ -333,17 +357,17 @@ ee.ocup_cuenta_propia_nacional = unlist(lapply(ocup_cuenta_propia_nacional., SE)
 #-------------------------------------------------------------------------------
 
 t_ocup_cuenta_prop_nuble. =mclapply(1:length(info),mc.cores = 4,
-                          function(x) svyratio(~I(cat.ocup=="cuenta propia"), 
-                          denominator=~I(cae_general=="Ocupado"),
-                          subset(info[[x]],prov_e==84),multicore = TRUE, 
-                          drop.empty.groups = FALSE, na.rm=TRUE))
+                                    function(x) svyratio(~I(cat.ocup=="cuenta propia"), 
+                                                         denominator=~I(cae_general=="Ocupado"),
+                                                         subset(info[[x]],prov_e==84),multicore = TRUE, 
+                                                         drop.empty.groups = FALSE, na.rm=TRUE))
 
 
 t_ocup_cuenta_prop_nacional. =mclapply(1:n,mc.cores = 4,
-                              function(x) svyratio(~I(cat.ocup=="cuenta propia"), 
-                              denominator=~I(cae_general=="Ocupado"),
-                              info[[x]],multicore = TRUE, 
-                              drop.empty.groups = FALSE, na.rm=TRUE))
+                                       function(x) svyratio(~I(cat.ocup=="cuenta propia"), 
+                                                            denominator=~I(cae_general=="Ocupado"),
+                                                            info[[x]],multicore = TRUE, 
+                                                            drop.empty.groups = FALSE, na.rm=TRUE))
 
 t_ocup_cuenta_prop_nuble =
   unlist(mclapply(t_ocup_cuenta_prop_nuble., '[[', 1) ) 
@@ -363,8 +387,8 @@ ee.t_ocup_cuenta_prop_nacional =
 tasa_contrato. = mclapply(1:n,mc.cores = 4, function(i)
   svyratio(~I(cat.ocup=="asalariado sin contrato"),
            denominator = ~I(cat.ocup=="asalariado sin contrato" | 
-                            cat.ocup=="asalariado con contrato definido" | 
-                            cat.ocup=="asalariado con contrato indefinido"), 
+                              cat.ocup=="asalariado con contrato definido" | 
+                              cat.ocup=="asalariado con contrato indefinido"), 
            design = info[[i]], multicore=TRUE, na.rm=TRUE))
 
 tasa_contrato =
@@ -429,7 +453,7 @@ meltsubempleo = melt(subempleo_, id = "fecha") %>%
   `colnames<-` (c("fecha", "tasa", "porcentaje"))
 
 p2 = ggplot(meltsubempleo,
-           aes(x=fecha,y=porcentaje,colour=tasa,group=tasa)) +
+            aes(x=fecha,y=porcentaje,colour=tasa,group=tasa)) +
   geom_line()
 
 ggsave("subempleo.png")
