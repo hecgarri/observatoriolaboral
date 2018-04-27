@@ -1,0 +1,149 @@
+---
+title: "Algunos datos relevantes sobre el mercado laboral de Ñuble"
+author: "Héctor Garrido"
+date: "26 de abril de 2018"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Ingreso promedio (pesos noviembre 2017)
+
+- El ingreso promedio a nivel nacional es de $ 485012
+- El ingreso promedio a nivel de Biobío es de $ 416569
+- El ingreso promedio a nivel de Ñuble es de $ 371106
+
+## Algunos indicadores de desigualdad 
+
+El índice de Gini mide la concentración del ingreso: 
+
+- El índice de Gini a nivel nacional es de 0.497
+- El índice de Gini a nivel de Ñuble es de 0.4856
+- El índice de Gini en la nueva región del Biobío 0.45717
+- Uruguay tiene un Gini de 39,7 (Banco mundial)
+- Canadá tiene un Gini de 33.6
+
+## Cuantiles de ingreso 
+
+- El 25% gana menos de 252000, el 50% gana menos de 315000, el 75% gana menos de 525000
+- En biobio esta cifra es de 210000, 294000 y 472500, respectivamente. 
+- Mientras que en Ñuble, 189000, 256200 y 420000, respectivamente. 
+
+
+## ¿Cuántas personas ganan el sueldo mínimo? 
+
+- A nivel nacional, sobre el total de ocupados, un 31.74% de los trabajadores gana el sueldo mínimo o menos del sueldo mínimo (241000 el año 2015)
+- En la nueva región del Biobío esta cifra asciende a 37.97\% 
+- Mientras que en Ñuble a 49.61\%
+
+## Salarios por sector económico y Provincia 
+
+\tiny
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & Región de Ñuble & Diguillín & Itata & Punilla \\ 
+  \hline
+Actividades inmobiliares, empresariales y de alquiler & 481355.00 & 508076.00 & 471682.00 & 380865.00 \\ 
+  Actividad no especificada & 482491.00 & 497005.00 &  &  \\ 
+  Administración Pública & 396159.00 & 416278.00 & 318041.00 & 380655.00 \\ 
+  Agricultura, ganadería, caza y silvicultura & 355194.00 & 360662.00 & 345542.00 & 350849.00 \\ 
+  comercio & 498864.00 & 516462.00 & 447103.00 & 444137.00 \\ 
+  construcción & 558929.00 & 561109.00 & 359894.00 & 604412.00 \\ 
+  Electricidad, gas y agua & 1005850.00 & 1002507.00 &  &  \\ 
+  hoteles y restaurantes & 380472.00 & 367194.00 &  & 449477.00 \\ 
+  industria manufacturera & 597514.00 & 636377.00 & 522035.00 & 520423.00 \\ 
+  intermediación financiera & 921445.00 & 955557.00 &  &  \\ 
+  servicios sociales y personales & 578980.00 & 601409.00 & 460882.00 & 529433.00 \\ 
+  transporte y comunicaciones & 529745.00 & 543011.00 & 522175.00 & 462387.00 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+## Conmutación 
+
+\begin{figure}
+\includegraphics[scale=0.7]{fig2.png}
+\end{figure}
+
+## Conmutación 
+
+\begin{figure}
+\includegraphics[scale=0.45]{fig3.png}
+\end{figure}
+
+## Conmutación 
+
+\begin{figure}
+\includegraphics[scale=0.45]{fig6.png}
+\end{figure}
+
+## Conmutación
+
+\begin{figure}
+\includegraphics[scale=0.45]{fig7.png}
+\end{figure}
+
+## Inmigración 
+
+\begin{figure}
+\includegraphics[scale=0.8]{fig4.png}
+\end{figure}
+
+
+
+## Desigualdad de género 
+
+\begin{figure}
+\includegraphics[scale=0.5]{fig1.png}
+\end{figure}
+
+## Desigualdad de género 
+
+\begin{figure}
+\includegraphics[scale=0.6]{fig5.png}
+\caption{Fuente: Encuesta ELSOC, COES}
+\end{figure}
+
+Sobre subutilización: Garrido subrayó que la subutilización es más alta entre las mujeres, con un 20% promedio en 2016 en Ñuble versus un 16,9% de las mujeres a nivel país. Estas cifras contrastan con la tasa entre los hombres, que en 2016 fue de 15,4% en Ñuble y de 11,6% a nivel país.
+
+
+
+## Calidad de la educación 
+
+Según PIAAC\footnote{ Evaluación Internacional de las Competencias para Adultos}, el 62% de las personas adultas en Chile es incapaz de resolver operaciones matemáticas básicas, como sumar y restar. Y en comprensión lectora, el 53% no entiende instrucciones escritas simples, como interpretar los signos de un mapa. Al desglosar los datos por rango etario, se observa que el 39% de la población entre 16 y 24 años se ubica en el rango de desempeño bajo, versus el 73% de las personas mayores de 55 años.
+
+## Mejora en las expectativas para Ñuble 
+
+
+\begin{figure}
+\includegraphics[scale=0.6]{fig8.png}
+\caption{Fuente: La discusión}
+\end{figure}
+
+## Algunas notas sobre coyuntura 
+
+- Dólar retrocede frente al peso chileno y se desmarca de alzas a nivel internacional (DF)
+
+## Algunas notas sobre coyuntura 
+
+\begin{figure}
+\includegraphics[scale=0.45]{fig9.png}
+\caption{Precio esperado del dólar a 11 meses. Fuente: Banco Central}
+\end{figure}
+
+
+## Algunas notas sobre coyuntura 
+
+\begin{figure}
+\includegraphics[scale=0.45]{fig10.png}
+\caption{Índice de percepción de la Economía. Fuente: Banco Central}
+\end{figure}
+
+## Algunas notas sobre coyuntura 
+
