@@ -43,15 +43,15 @@ gini_bio = svygini(~yautcor, design = design_rep_bio, na.rm = TRUE)
 design_rep_nuble = convey_prep(design_nub)
 gini_nuble = svygini(~yautcor, design = design_rep_nuble, na.rm = TRUE)
 
-minimo_nacional = svyratio(~I(yoprcor<=241000),
+minimo_nacional = svyratio(~I(yoprcor<=241000*0.8),
                            denominator = ~I(activ==1), 
                            design = design_n,na.rm = TRUE)
 
-minimo_bio = svyratio(~I(yoprcor<=241000),
+minimo_bio = svyratio(~I(yoprcor<=241000*0.8),
                            denominator = ~I(activ==1), 
                            design = design_bio,na.rm = TRUE)
 
-minimo_nuble = svyratio(~I(yoprcor<=241000),
+minimo_nuble = svyratio(~I(yoprcor<=241000*0.8),
                       denominator = ~I(activ==1), 
                       design = design_nub,na.rm = TRUE)
 
