@@ -115,8 +115,7 @@ pepito = data %>% filter(id == 945850611) # Don pepito tiene más de un trabajo
 
 # Por eso desarrollo lo siguiente con el fin de unir los ingresos duplicados
 data = data %>% group_by(id, fecha_deven) %>% 
-                   mutate(ingreso_total = sum(ingreso),
-                          id_ = paste0(id, fecha_deven)) 
+                   mutate(ingreso_total = sum(ingreso)) 
 
 ### Ingreso por mes: 
 ingreso_medio = svyby(~ingreso, by = ~provincia+sector,design = diseno,  svymean) %>% 
