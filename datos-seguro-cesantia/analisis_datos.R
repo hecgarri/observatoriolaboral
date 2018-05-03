@@ -10,20 +10,21 @@ afiliados <- read_delim("~/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de �
 names(afiliados) = c("id", "sex", "date of birth", "birth county", 
                      "education", "esc", "ecivil", "county", "institution")
 
-afiliados = filter(afiliados, grepl('^084', county))
+afiliados = filter(afiliados, grepl('^08401', county))
 
 rentas_imponibles <- read_delim("~/GoogleDriveUBB/OLR Ñuble - Observatorio laboral de Ñuble/Bases de datos/Base de Datos Seguro de Cesantía/muestraasc5%/5_rentas_imponibles.csv", 
                                 ";", escape_double = FALSE, col_names = FALSE, 
                                 trim_ws = TRUE)
+
 names(rentas_imponibles) = c("id", "id_emp", "fecha_deven", "tipo", 
                              "subsidio", "econ_activ", "comuna_emp", 
                              "ingreso", "id ingreso", "id tope")
 
 
-rentas_imponibles = filter(rentas_imponibles, fecha_deven == "201603" |
-                             fecha_deven == "201602" | fecha_deven == "201601")
+#rentas_imponibles = filter(rentas_imponibles, fecha_deven == "201603" |
+#                             fecha_deven == "201602" | fecha_deven == "201601")
 
-data = inner_join(afiliados, rentas_imponibles) 
+data = left_join(afiliados, rentas_imponibles) 
   
 
 data = mutate(data, county = recode_factor(county, '08401' = "Chillán", 
@@ -101,6 +102,27 @@ data = mutate(data, ingreso = as.numeric(ingreso))
 data = mutate(data, residente = ifelse(grepl('^084', comuna_emp),1,0))
 
 diseno = svydesign(~id, probs = NULL, weights = NULL, data = data)
+
+
+obs = data %>% group_by(id) %>% count() # Número de cotizaciones por individuo
+meses = data %>% group_by(fecha_deven) %>% count() #Observaciones por mes
+
+
+
+### Ingreso don pepito 
+
+pepito = data %>% filter(id == 945850611) # Don pepito tiene más de un trabajo
+
+# Por eso desarrollo lo siguiente con el fin de unir los ingresos duplicados
+data = data %>% group_by(id, fecha_deven) %>% 
+                   mutate(ingreso_total = sum(ingreso),
+                          id_ = paste0(id, fecha_deven)) 
+
+### Ingreso por mes: 
+ingreso_medio = svyby(~ingreso, by = ~provincia+sector,design = diseno,  svymean) %>% 
+  mutate(cv = (se/ingreso)*100)
+
+
 
 ingreso_medio = svyby(~ingreso, by = ~provincia+sector,design = diseno,  svymean) %>% 
   mutate(cv = (se/ingreso)*100)
