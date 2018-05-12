@@ -24,9 +24,13 @@ directorio.casen = data.frame(names(directorio.casen),directorio.casen)
 
 casen2015 = data.frame(casen2015)
 
-diseno = svydesign(id = ~varunit, strata = ~varstrat, weights = ~expr, nest = TRUE, data = casen2015)
+diseno = svydesign(id = ~varunit, strata = ~varstrat,
+                   weights = ~expr, nest = TRUE, data = casen2015)
 
 diseno$variables$ingreso_hora = casen2015$yoprCor/(casen2015$o10*4)
+
+svymean(~ingreso_hora, design = diseno)
+
 
 diseno$variables$sexo2 = ifelse(diseno$variables$sexo==2,1,0) 
 
