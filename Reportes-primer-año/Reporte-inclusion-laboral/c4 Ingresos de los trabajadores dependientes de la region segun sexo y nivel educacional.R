@@ -1,5 +1,5 @@
 ##############################################################################################################
-# Cuadro 21. Ingresos de los trabajadores dependientes de la región según situación de discapacidad y nivel educacional
+# Cuadro 4. Ingresos de los trabajadores dependientes de la región según situación de discapacidad y nivel educacional
 ##############################################################################################################
 
 diseño$variables$dependiente = recode_factor(diseño$variables$o15, `3` = 11, `4`=11,
@@ -118,4 +118,4 @@ freq1 = xtabs(~indigena+I(provincia==84)+I(dependiente==11), data=diseño$variab
 numero2$freq_TRUE = freq$Freq
 numero2$freq_FALSE = freq1$Freq
 
-numero2$frecuencia = freq$frecuencia
+numero2$frecuencia = freq$frecuencia 

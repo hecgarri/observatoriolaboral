@@ -35,9 +35,9 @@ El índice de Gini mide la concentración del ingreso:
 
 ## ¿Cuántas personas ganan el sueldo mínimo? 
 
-- A nivel nacional, sobre el total de ocupados, un 31.74% de los trabajadores gana el sueldo mínimo o menos del sueldo mínimo (241000 el año 2015)
-- En la nueva región del Biobío esta cifra asciende a 37.97\% 
-- Mientras que en Ñuble a 49.61\%
+- A nivel nacional, sobre el total de ocupados, un 16.3% de los trabajadores gana el sueldo mínimo o menos del sueldo mínimo (241000 el año 2015)
+- En la nueva región del Biobío esta cifra asciende a 21\% 
+- Mientras que en Ñuble a 27.1\%
 
 ## Salarios por sector económico y Provincia 
 
