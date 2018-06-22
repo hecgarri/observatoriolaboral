@@ -132,6 +132,36 @@ ingresos_jefas_2 =  diseno %>% filter(!is.na(yoprCor),
   summarise(estimate = survey_mean(yoprCor, na.rm = TRUE, vartype = "cv"), 
             frecuencia = unweighted(n()))
 
+ingresos_jefas_2 = cbind(nivel_educ = c("Total", "Total"), ingresos_jefas_2)
+
+ingresos_jefas_ = rbind(ingresos_jefas_, ingresos_jefas_2)
+
+ingresos_jefas_ = cbind(ingresos_jefas_[c(1,2,3,7),c(2,3)], ingresos_jefas_[c(4,5,6,8),3]) 
+
+colnames(ingresos_jefas_) = c("Nivel educacional", "Hombres", "Mujeres")
+
+ingresos_jefas_ = ingresos_jefas_  %>% mutate(brecha = (((Mujeres-Hombres)/Hombres)*100) %>% round(2))
+
+ingresos_jefas_[,c(2,3)] = round(ingresos_jefas_[,c(2,3)],0)
+
+write.csv(ingresos_jefas_, paste0(path,"/cuadro_4_alt3.csv"))
+
+#################################################################
+ingresos_jefas_zona =  diseno %>% filter(!is.na(yoprCor), 
+                                     pco1==1, !is.na(zona)) %>%
+  group_by(sexo, zona) %>% 
+  summarise(estimate = survey_mean(yoprCor, na.rm = TRUE, vartype = "cv"), 
+            frecuencia = unweighted(n()))
+ingresos_jefas_zona = ingresos_jefas_zona %>% select(sexo, zona, estimate) %>% 
+  rename(salario = estimate)
+
+ingresos_jefas_zona = cbind(ingresos_jefas_zona[c(1,2),c(2,3)], ingresos_jefas_zona[c(3,4),c(3)])
+colnames(ingresos_jefas_zona) = c("Zona","Hombre", "Mujer")
+ingresos_jefas_zona = ingresos_jefas_zona %>% mutate(brecha = (((Mujer-Hombre)/Hombre)*100) %>% round(1))
+
+ingresos_jefas_zona[,c(2,3)] = round(ingresos_jefas_zona[,c(2,3)],0) 
+
+write.csv(ingresos_jefas_zona, paste0(path,"/cuadro_4_alt4.csv"))
 
 
 ### 
@@ -187,34 +217,4 @@ brecha = (sal_real_muj-sal_real_hom)/(sal_real_hom)
 
 ts.plot(brecha)
 
-
-## Cuántos ganan el sueldo mínimo 
-
-path_casen = file.path("/home/hector/GoogleDriveUBB/",
-                 "OLR Ñuble - Observatorio laboral de Ñuble","Bases de datos/",
-                 "Encuesta de Caracterización Socioeconómica Nacional (CASEN)/Casen 2015 SPSS.sav")
-
-casen2015 = read.spss(path_casen,use.value.labels = FALSE,
-                      to.data.frame= FALSE, use.missings = TRUE)
-
-
-etiquetas.casen = attr(casen2015, "label.table")
-directorio.casen = attr(casen2015,"variable.labels")
-directorio.casen = data.frame(names(directorio.casen),directorio.casen)
-
-casen2015 = casen2015 %>% tbl_df()
-diseno = casen2015 %>% as_survey_design(id = varunit, strata = varstrat,
-                                        weights  = expr,nest = TRUE)
-
-diseno$variables = diseno$variables %>% mutate(sueldo_minimo = ifelse(yoprCor<=241000*0.8,1,0))
-minimo_nuble = diseno %>% filter(!is.na(yoprCor), provincia ==84) %>%
-  group_by(sueldo_minimo) %>% summarise(estimate = survey_mean())
-
-diseno$variables = diseno$variables %>% mutate(sueldo_minimo = ifelse(yoprCor<=241000*0.8,1,0))
-minimo_nuble = diseno %>% filter(!is.na(yoprCor), region==8) %>%
-  group_by(sueldo_minimo) %>% summarise(estimate = survey_mean())
-
-diseno$variables = diseno$variables %>% mutate(sueldo_minimo = ifelse(yoprCor<=241000*0.8,1,0))
-minimo_nuble = diseno %>% filter(!is.na(yoprCor)) %>%
-  group_by(sueldo_minimo) %>% summarise(estimate = survey_mean())
 
